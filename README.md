@@ -1,1 +1,1 @@
-# Image-Foreground-Background-Segmentation-using-Network-Flow
+# Image Foreground Background Segmentation using Network Flow
