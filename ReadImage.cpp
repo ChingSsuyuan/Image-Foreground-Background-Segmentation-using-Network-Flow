@@ -5,14 +5,13 @@ using namespace cv;
 using namespace std;
 
 struct PixelFeature {
-    Vec3b colorRGB;    // RGB 颜色值
-    Point position;    // 像素位置
-    float gradient;    // 梯度幅度
-    float intensity;   // 灰度值
+    Vec3b colorRGB;    // RGB color 
+    Point position;    // image element position
+    float gradient;    // gradient range
+    float intensity;   // Grayscale value
 };
 
 vector<vector<PixelFeature>> extractFeatures(const Mat& image) {
-    // 转换图像为灰度图和梯度图
     Mat gray, gradX, gradY, gradMag;
     cvtColor(image, gray, COLOR_BGR2GRAY);
     Sobel(gray, gradX, CV_32F, 1, 0); // X 方向梯度
