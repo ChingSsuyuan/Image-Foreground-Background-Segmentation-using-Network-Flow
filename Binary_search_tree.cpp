@@ -36,16 +36,16 @@ void BST::insert(const PixelFeature& feature) {
     root = insertNode(root, feature);
 }
 
-// 中序遍历
-void BST::inorderTraversal(std::shared_ptr<BSTNode> node) const {
-    if (node) {
-        inorderTraversal(node->left);
-        std::cout << "RGB: (" << node->data.color[0] << ", " 
-                  << node->data.color[1] << ", " << node->data.color[2] << ") "
-                  << "位置: (" << node->data.position.x << ", " << node->data.position.y << ")" << std::endl;
-        inorderTraversal(node->right);
-    }
-}
+
+// void BST::inorderTraversal(std::shared_ptr<BSTNode> node) const {
+//     if (node) {
+//         inorderTraversal(node->left);
+//         std::cout << "RGB: (" << node->data.color[0] << ", " 
+//                   << node->data.color[1] << ", " << node->data.color[2] << ") "
+//                   << "位置: (" << node->data.position.x << ", " << node->data.position.y << ")" << std::endl;
+//         inorderTraversal(node->right);
+//     }
+// }
 
 // 外部调用的中序遍历接口
 void BST::inorderTraversal() const {
