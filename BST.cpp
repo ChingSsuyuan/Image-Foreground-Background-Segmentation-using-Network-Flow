@@ -1,9 +1,13 @@
 #include "BST.h"
 #include <iostream>
 
-// 辅助函数：计算 RGB 的总和，用于排序
-int calculateRGBSum(const PixelFeature& feature) {
-    return feature.color[0] + feature.color[1] + feature.color[2];
+int calculate3DSimilarityWeight(const PixelFeature& feature1, const PixelFeature& feature2) {
+    int dx = feature1.position.x - feature2.position.x;
+    int dy = feature1.position.y - feature2.position.y;
+    int dz = feature1.position.z - feature2.position.z; // 如果有z坐标
+    double distance = std::sqrt(dx * dx + dy * dy + dz * dz);
+    int weight = static_cast<int>(distance * 100); // 放大100倍
+    return weight;
 }
 
 // 插入节点
