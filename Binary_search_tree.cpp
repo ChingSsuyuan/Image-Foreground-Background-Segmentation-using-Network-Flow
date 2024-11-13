@@ -15,21 +15,21 @@ int calculate3DSimilarityWeight(const PixelFeature & feature1, const PixelFeatur
     return weight;
 }
 
-// 插入节点
+// 插入节点（根据颜色相似度权重进行排序）
 std::shared_ptr<BSTNode> BST::insertNode(std::shared_ptr<BSTNode> node, const PixelFeature& feature) {
     if (!node) return std::make_shared<BSTNode>(feature);
 
-    // 基于 RGB 总和的排序
-    int featureSum = calculateRGBSum(feature);
-    int nodeSum = calculateRGBSum(node->data);
+    // 使用颜色相似度计算权重
+    int featureWeight = calculateColorSimilarityWeight(feature, node->data);
 
-    if (featureSum < nodeSum) {
+    if (featureWeight > 50) { // 假设权重高于 50 表示颜色相似度较高，则插入左子树
         node->left = insertNode(node->left, feature);
     } else {
         node->right = insertNode(node->right, feature);
     }
     return node;
 }
+
 
 // 插入接口函数
 void BST::insert(const PixelFeature& feature) {
