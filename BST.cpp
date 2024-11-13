@@ -1,12 +1,17 @@
 #include "BST.h"
 #include <iostream>
 
-int calculate3DSimilarityWeight(const PixelFeature& feature1, const PixelFeature& feature2) {
-    int dx = feature1.position.x - feature2.position.x;
-    int dy = feature1.position.y - feature2.position.y;
-    int dz = feature1.position.z - feature2.position.z; // 如果有z坐标
+const int C = 100; // Constant for amplifying weights
+const double SIGMA = 10.0; // Parameters controlling the decay rate
+
+int calculate3DSimilarityWeight(const PixelFeature & feature1, const PixelFeature & feature2) {
+    int dx = feature1.color[0] - feature2.color[0];
+    int dy = feature1.color[1] - feature2.color[1];
+    int dz = feature1.color[2] - feature2.color[2];
     double distance = std::sqrt(dx * dx + dy * dy + dz * dz);
-    int weight = static_cast<int>(distance * 100); // 放大100倍
+    
+    //Inverse Exponential Similarity Calculation
+    int weight = static_cast<int>(C * std::exp(-distance / SIGMA));
     return weight;
 }
 
