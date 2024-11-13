@@ -18,10 +18,7 @@ class BST {
 public:
     BST() : root(nullptr) {}
 
-    // 插入节点，基于 RGB 总和排序
     void insert(const PixelFeature& feature);
-
-    // 中序遍历输出数据
     void inorderTraversal() const;
 
 private:
