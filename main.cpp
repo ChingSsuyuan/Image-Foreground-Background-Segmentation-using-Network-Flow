@@ -5,6 +5,7 @@
 #include <memory>
 #include "FeatureExtractor.h"
 #include "Construct_Graph.h"
+#include "EdmondsKarp.h"
 
 using namespace cv;
 using namespace std;
