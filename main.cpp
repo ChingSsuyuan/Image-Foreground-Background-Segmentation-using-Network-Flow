@@ -29,13 +29,13 @@ int main() {
         return -1;
     }
     vector<vector<PixelFeature>> extraction = extractFeatures(image);
-    // for (vector<PixelFeature> i : extraction){
-    //     for (PixelFeature j : i){
-    //         cout << "colorRGB " <<j.colorRGB << endl;
-    //         cout << "gradientMagnitude " << j.gradientMagnitude << endl;
-    //         cout << "position " << j.position << endl;
-    //     }
-    // }
+    for (vector<PixelFeature> i : extraction){
+        for (PixelFeature j : i){
+            cout << "position " << j.position << endl;
+            cout << "colorRGB " <<j.colorRGB << endl;
+            cout << "gradientMagnitude " << j.gradientMagnitude << endl;
+        }
+    }
     
     AdjacencyList adjList = generateGraph(image, extraction);
     for (const auto& [key, head] : adjList) {
