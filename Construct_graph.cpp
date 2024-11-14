@@ -39,7 +39,7 @@ struct ListNode {
     ListNode(int x_, int y_, int w) : x(x_), y(y_), weight(w), next(nullptr) {}
 };
 
-// 创建邻接表的辅助函数
+// Helper Functions for Creating Neighbourhood Tables
 std::shared_ptr<ListNode> createAdjacencyList(const PixelFeature& feature, cv::Mat& image, const std::vector<std::vector<PixelFeature>>& features, AdjacencyList& adjList) {
     int x = feature.position.x;
     int y = feature.position.y;
@@ -68,11 +68,7 @@ std::shared_ptr<ListNode> createAdjacencyList(const PixelFeature& feature, cv::M
     return head;
 }
 
-    adjList[nodeName] = head->next;  // 不保存当前节点自身，只保存其邻居节点
-    return head;
-}
-
-// 示例：生成整张图的邻接表
+// Generate an adjacency table for the whole graph
 AdjacencyList generateGraph(cv::Mat& image, const std::vector<std::vector<PixelFeature>>& features) {
     AdjacencyList adjList;
 
