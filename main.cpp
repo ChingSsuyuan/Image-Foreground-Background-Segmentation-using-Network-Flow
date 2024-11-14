@@ -57,7 +57,7 @@ int main() {
 
     return 0;
 
-    // std::shared_ptr<ReachableNode> edmond = edmondsKarp(adjList, {image.cols/2, image.rows/2}, {0,0});
-    // cout<<"max flow: "<<edmond <<endl;
+    std::shared_ptr<ReachableNode> edmond = edmondsKarp(adjList, {image.cols/2, image.rows/2}, {0,0});
+    cout<<"max flow: "<<edmond <<endl;
 
 }
