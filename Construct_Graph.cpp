@@ -11,7 +11,7 @@ const int C = 100;              // Weight amplification constant
 const double SIGMA_RGB = 10.0;  // RGB Distance attenuation factor
 const double SIGMA_GRAD = 5.0;  // Gradient amplitude distance attenuation factor
 const double ALPHA = 0.5;       // RGB Weighting of Differences
-const double BETA = 0.5;        // Weighting of gradient differences
+const double BETA = 0;        // Weighting of gradient differences
 
 // Type alias for adjacency list with custom PairHash
 using AdjacencyList = std::unordered_map<std::pair<int, int>, std::shared_ptr<ListNode>, PairHash>;
