@@ -8,8 +8,6 @@
 #include <utility>
 #include "Construct_Graph.h"
 
-// 使用类型别名表示邻接链表
-using AdjacencyList = std::unordered_map<std::pair<int, int>, std::shared_ptr<ListNode>, PairHash>;
 
 // BFS 寻找增广路径，返回是否找到增广路径
 bool bfs(const AdjacencyList& adjList, std::pair<int, int> source, std::pair<int, int> sink,
