@@ -6,37 +6,37 @@
 #include "FeatureExtractor.h"
 #include <unordered_map>
 
-const int C = 100;           // 权重放大常数
-const double SIGMA_RGB = 10.0;  // RGB 距离衰减系数
-const double SIGMA_GRAD = 5.0;  // 梯度幅值距离衰减系数
-const double ALPHA = 0.5;    // RGB 差异的权重
-const double BETA = 0.5;     // 梯度差异的权重
+const int C = 100;           // Weight amplification constant
+const double SIGMA_RGB = 10.0;  // RGB Distance attenuation factor
+const double SIGMA_GRAD = 5.0;  // Gradient amplitude distance attenuation factor
+const double ALPHA = 0.5;    // RGB Weighting of Differences
+const double BETA = 0.5;     // Weighting of gradient differences
 
-// 计算 3D 相似度权重，结合 RGB 差异和梯度差异
 int calculateSimilarityWeight(const PixelFeature& feature1, const PixelFeature& feature2) {
-    // 计算 RGB 差异
+    // Calculating RGB Differences
     int dx = feature1.colorRGB[0] - feature2.colorRGB[0];
     int dy = feature1.colorRGB[1] - feature2.colorRGB[1];
     int dz = feature1.colorRGB[2] - feature2.colorRGB[2];
     double rgbDistance = std::sqrt(dx * dx + dy * dy + dz * dz);
     
-    // 计算梯度差异
+    // Calculating gradient differences
     double gradDistance = std::abs(feature1.gradientMagnitude - feature2.gradientMagnitude);
     
-    // 综合计算权重
+    // Combined calculation of weights
     int weight = static_cast<int>(C * std::exp(- (ALPHA * (rgbDistance / SIGMA_RGB) + BETA * (gradDistance / SIGMA_GRAD))));
     return weight;
 }
-// 使用哈希表来存储邻接表
+// Using a hash table to store an adjacency table
 using AdjacencyList = std::unordered_map<std::string, std::shared_ptr<ListNode>>;
 
-// 链表节点结构体
+// linked list node structure
 struct ListNode {
-    std::string name;            // 节点名字 (x, y)
-    int weight;                  // 到相邻点的权重
-    std::shared_ptr<ListNode> next; // 指向链表下一个节点
+    int x;                      // Node x-coordinate
+    int y;                      // Node y-coordinate
+    int weight;                 // Weights to neighbouring points
+    std::shared_ptr<ListNode> next; // Points to the next node in the chain
 
-    ListNode(const std::string& n, int w) : name(n), weight(w), next(nullptr) {}
+    ListNode(int x_, int y_, int w) : x(x_), y(y_), weight(w), next(nullptr) {}
 };
 
 // 创建邻接表的辅助函数
