@@ -2,12 +2,7 @@
 #include <queue>
 #include <climits>
 #include <unordered_set>
-
-struct ReachableNode {
-    int x, y;
-    std::shared_ptr<ReachableNode> next;
-    ReachableNode(int x_, int y_) : x(x_), y(y_), next(nullptr) {}
-};
+#include <stack>
 
 bool bfs(const AdjacencyList& adjList, std::pair<int, int> source, std::pair<int, int> sink,
          std::unordered_map<std::pair<int, int>, std::pair<int, int>, PairHash>& parent) {
@@ -74,7 +69,7 @@ std::shared_ptr<ReachableNode> getReachableNodes(const AdjacencyList& adjList, s
     return head;
 }
 // Edmonds-Karp 最大流算法实现
-int edmondsKarp(AdjacencyList& adjList, std::pair<int, int> source, std::pair<int, int> sink, std::shared_ptr<ReachableNode>& reachableNodes) {
+std::shared_ptr<ReachableNode> edmondsKarp(AdjacencyList& adjList, std::pair<int, int> source, std::pair<int, int> sink, std::shared_ptr<ReachableNode>& reachableNodes) {
     std::unordered_map<std::pair<int, int>, std::pair<int, int>, PairHash> parent;
     int maxFlow = 0;
 
@@ -123,5 +118,5 @@ int edmondsKarp(AdjacencyList& adjList, std::pair<int, int> source, std::pair<in
     // 获取从 source 可达的所有节点，存储在链表中
     reachableNodes = getReachableNodes(adjList, source);
 
-    return ReachableNode;
+    return reachableNodes;
 }
