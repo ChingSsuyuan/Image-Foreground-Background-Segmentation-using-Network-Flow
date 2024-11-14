@@ -6,30 +6,21 @@
 #include "FeatureExtractor.h"
 #include <unordered_map>
 
-const int C = 100;           // Weight amplification constant
+const int C = 100;              // Weight amplification constant
 const double SIGMA_RGB = 10.0;  // RGB Distance attenuation factor
 const double SIGMA_GRAD = 5.0;  // Gradient amplitude distance attenuation factor
-const double ALPHA = 0.5;    // RGB Weighting of Differences
-const double BETA = 0.5;     // Weighting of gradient differences
+const double ALPHA = 0.5;       // RGB Weighting of Differences
+const double BETA = 0.5;        // Weighting of gradient differences
 
-int calculateSimilarityWeight(const PixelFeature& feature1, const PixelFeature& feature2) {
-    // Calculating RGB Differences
-    int dx = feature1.colorRGB[0] - feature2.colorRGB[0];
-    int dy = feature1.colorRGB[1] - feature2.colorRGB[1];
-    int dz = feature1.colorRGB[2] - feature2.colorRGB[2];
-    double rgbDistance = std::sqrt(dx * dx + dy * dy + dz * dz);
-    
-    // Calculating gradient differences
-    double gradDistance = std::abs(feature1.gradientMagnitude - feature2.gradientMagnitude);
-    
-    // Combined calculation of weights
-    int weight = static_cast<int>(C * std::exp(- (ALPHA * (rgbDistance / SIGMA_RGB) + BETA * (gradDistance / SIGMA_GRAD))));
-    return weight;
-}
-// Using a hash table to store an adjacency table
-using AdjacencyList = std::unordered_map<std::string, std::shared_ptr<ListNode>>;
+// PairHash for hashing std::pair<int, int>
+struct PairHash {
+    template <class T1, class T2>
+    std::size_t operator()(const std::pair<T1, T2>& p) const {
+        return std::hash<T1>()(p.first) ^ std::hash<T2>()(p.second);
+    }
+};
 
-// linked list node structure
+// Linked list node structure
 struct ListNode {
     int x;                      // Node x-coordinate
     int y;                      // Node y-coordinate
@@ -39,12 +30,28 @@ struct ListNode {
     ListNode(int x_, int y_, int w) : x(x_), y(y_), weight(w), next(nullptr) {}
 };
 
-// Helper Functions for Creating Neighbourhood Tables
+// Type alias for adjacency list with custom PairHash
+using AdjacencyList = std::unordered_map<std::pair<int, int>, std::shared_ptr<ListNode>, PairHash>;
+
+// Calculate similarity weight based on RGB and gradient differences
+int calculateSimilarityWeight(const PixelFeature& feature1, const PixelFeature& feature2) {
+    int dx = feature1.colorRGB[0] - feature2.colorRGB[0];
+    int dy = feature1.colorRGB[1] - feature2.colorRGB[1];
+    int dz = feature1.colorRGB[2] - feature2.colorRGB[2];
+    double rgbDistance = std::sqrt(dx * dx + dy * dy + dz * dz);
+    
+    double gradDistance = std::abs(feature1.gradientMagnitude - feature2.gradientMagnitude);
+    
+    int weight = static_cast<int>(C * std::exp(-(ALPHA * (rgbDistance / SIGMA_RGB) + BETA * (gradDistance / SIGMA_GRAD))));
+    return weight;
+}
+
+// Helper function for creating adjacency list
 std::shared_ptr<ListNode> createAdjacencyList(const PixelFeature& feature, cv::Mat& image, const std::vector<std::vector<PixelFeature>>& features, AdjacencyList& adjList) {
     int x = feature.position.x;
     int y = feature.position.y;
 
-    std::shared_ptr<ListNode> head = std::make_shared<ListNode>(x, y, 0);  //Header of the current node
+    std::shared_ptr<ListNode> head = std::make_shared<ListNode>(x, y, 0);
     std::shared_ptr<ListNode> current = head;
 
     int dx[] = {0, 1, 0, -1};  // Right, down, left, up.
@@ -68,7 +75,7 @@ std::shared_ptr<ListNode> createAdjacencyList(const PixelFeature& feature, cv::M
     return head;
 }
 
-// Generate an adjacency table for the whole graph
+// Generate adjacency list for the whole graph
 AdjacencyList generateGraph(cv::Mat& image, const std::vector<std::vector<PixelFeature>>& features) {
     AdjacencyList adjList;
 
@@ -80,4 +87,3 @@ AdjacencyList generateGraph(cv::Mat& image, const std::vector<std::vector<PixelF
 
     return adjList;
 }
-
