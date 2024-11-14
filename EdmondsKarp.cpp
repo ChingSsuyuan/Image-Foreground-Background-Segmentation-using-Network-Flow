@@ -3,15 +3,15 @@
 #include <queue>
 #include <climits>
 
-// 构造函数，初始化图的容量矩阵
+// Constructor to initialise the capacity matrix of the graph
 EdmondsKarp::EdmondsKarp(int numVertices) : numVertices(numVertices), capacityGraph(numVertices, std::vector<int>(numVertices, 0)) {}
 
-// 添加带容量的边
+// Adding an edge with capacity
 void EdmondsKarp::addEdge(int u, int v, int capacity) {
     capacityGraph[u][v] = capacity;
 }
 
-// 使用 BFS 查找增广路径并更新路径上的父节点
+// Use BFS to find the augmented path and update the parent node on the path
 bool EdmondsKarp::bfs(int source, int sink, std::vector<int>& parent) {
     std::vector<bool> visited(numVertices, false);
     std::queue<int> q;
@@ -24,18 +24,18 @@ bool EdmondsKarp::bfs(int source, int sink, std::vector<int>& parent) {
         q.pop();
 
         for (int v = 0; v < numVertices; ++v) {
-            if (!visited[v] && capacityGraph[u][v] > 0) { // 存在剩余容量且未访问过
+            if (!visited[v] && capacityGraph[u][v] > 0) { // Remaining capacity exists and has not been accessed
                 q.push(v);
                 parent[v] = u;
                 visited[v] = true;
-                if (v == sink) return true; // 到达汇点，返回 true
+                if (v == sink) return true; //Reach the meeting point, return true
             }
         }
     }
-    return false; // 无增广路径
+    return false; // No enhancement path
 }
 
-// 计算最大流
+// Calculate maximum flow
 int EdmondsKarp::maxFlow(int source, int sink) {
     int maxFlow = 0;
     std::vector<std::vector<int>> residualGraph = capacityGraph;
