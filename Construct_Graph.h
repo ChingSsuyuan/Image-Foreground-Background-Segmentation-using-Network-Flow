@@ -5,6 +5,7 @@
 #include <memory>
 #include <unordered_map>
 #include <vector>
+#include "FeatureExtractor.h"
 
 
 // PairHash，用于为 std::pair<int, int> 定义哈希
