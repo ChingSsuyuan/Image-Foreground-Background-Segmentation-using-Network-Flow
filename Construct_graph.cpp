@@ -81,12 +81,3 @@ AdjacencyList generateGraph(cv::Mat& image, const std::vector<std::vector<PixelF
     return adjList;
 }
 
-// 插入接口函数
-void BST::insert(const PixelFeature& feature) {
-    root = insertNode(root, feature);
-}
-
-// 外部调用的中序遍历接口
-void BST::inorderTraversal() const {
-    inorderTraversal(root);
-}
