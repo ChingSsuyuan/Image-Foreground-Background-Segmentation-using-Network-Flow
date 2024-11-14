@@ -9,6 +9,15 @@
 
 using namespace cv;
 using namespace std;
+
+void printReachableNodes(const std::shared_ptr<ReachableNode>& head) {
+    std::shared_ptr<ReachableNode> current = head;
+    while (current) {
+        std::cout << "(" << current->x << ", " << current->y << ")\n";
+        current = current->next;
+    }
+}
+
 int main() {
     
     string path = "Pictures/3x3_image.png";
