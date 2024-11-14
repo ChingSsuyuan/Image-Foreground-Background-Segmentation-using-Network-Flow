@@ -37,7 +37,42 @@ bool bfs(const AdjacencyList& adjList, std::pair<int, int> source, std::pair<int
     }
     return false;
 }
+std::shared_ptr<ReachableNode> getReachableNodes(const AdjacencyList& adjList, std::pair<int, int> source) {
+    std::unordered_map<std::pair<int, int>, bool, PairHash> visited;
+    std::stack<std::pair<int, int>> stack;
+    stack.push(source);
+    visited[source] = true;
 
+    std::shared_ptr<ReachableNode> head = nullptr;
+    std::shared_ptr<ReachableNode> current = nullptr;
+
+    while (!stack.empty()) {
+        auto u = stack.top();
+        stack.pop();
+
+        std::shared_ptr<ReachableNode> newNode = std::make_shared<ReachableNode>(u.first, u.second);
+        if (!head) {
+            head = newNode;
+            current = head;
+        } else {
+            current->next = newNode;
+            current = newNode;
+        }
+
+        std::shared_ptr<ListNode> node = adjList.at(u);
+        while (node) {
+            std::pair<int, int> v = {node->x, node->y};
+
+            if (!visited[v] && node->weight > 0) {
+                stack.push(v);
+                visited[v] = true;
+            }
+            node = node->next;
+        }
+    }
+
+    return head;
+}
 // Edmonds-Karp 最大流算法实现
 int edmondsKarp(AdjacencyList& adjList, std::pair<int, int> source, std::pair<int, int> sink, std::shared_ptr<ReachableNode>& reachableNodes) {
     std::unordered_map<std::pair<int, int>, std::pair<int, int>, PairHash> parent;
