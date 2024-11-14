@@ -62,6 +62,14 @@ std::shared_ptr<ListNode> createAdjacencyList(const PixelFeature& feature, cv::M
     return head;
 }
 
+std::unordered_map<std::string, std::shared_ptr<ListNode>> adjacencyList;
+    for (int y = 0; y < image.rows; ++y) {
+        for (int x = 0; x < image.cols; ++x) {
+            PixelFeature& pf = features[y][x];
+            std::string nodeName = "(" + std::to_string(pf.position.x) + ", " + std::to_string(pf.position.y) + ")";
+            adjacencyList[nodeName] = createAdjacencyList(pf, features, image.rows, image.cols);
+        }
+    }
 
 // 插入接口函数
 void BST::insert(const PixelFeature& feature) {
