@@ -3,7 +3,6 @@
 #include <cmath>
 #include <memory>
 #include <string>
-#include "BST.h"
 #include "FeatureExtractor.h"
 
 const int C = 100;           // 权重放大常数
@@ -64,37 +63,10 @@ std::shared_ptr<ListNode> createAdjacencyList(const PixelFeature& feature, cv::M
 }
 
 
-// 插入节点（根据颜色相似度权重进行排序）
-// std::shared_ptr<BSTNode> BST::insertNode(std::shared_ptr<BSTNode> node, const PixelFeature& feature) {
-//     if (!node) return std::make_shared<BSTNode>(feature);
-
-//     // 使用颜色相似度计算权重
-//     int featureWeight = calculateColorSimilarityWeight(feature, node->data);
-
-//     if (featureWeight > 50) { // 假设权重高于 50 表示颜色相似度较高，则插入左子树
-//         node->left = insertNode(node->left, feature);
-//     } else {
-//         node->right = insertNode(node->right, feature);
-//     }
-//     return node;
-// }
-
-
 // 插入接口函数
 void BST::insert(const PixelFeature& feature) {
     root = insertNode(root, feature);
 }
-
-
-// void BST::inorderTraversal(std::shared_ptr<BSTNode> node) const {
-//     if (node) {
-//         inorderTraversal(node->left);
-//         std::cout << "RGB: (" << node->data.color[0] << ", " 
-//                   << node->data.color[1] << ", " << node->data.color[2] << ") "
-//                   << "位置: (" << node->data.position.x << ", " << node->data.position.y << ")" << std::endl;
-//         inorderTraversal(node->right);
-//     }
-// }
 
 // 外部调用的中序遍历接口
 void BST::inorderTraversal() const {
