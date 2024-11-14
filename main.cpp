@@ -1,7 +1,10 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
+#include <unordered_map>
+#include <vector>
+#include <memory>
 #include "FeatureExtractor.h"
-// #include "BST.h"
+#include "Construct_Graph.h"
 
 using namespace cv;
 using namespace std;
@@ -23,8 +26,18 @@ int main() {
             cout << "position " << j.position << endl;
         }
     }
-    namedWindow("image", WINDOW_AUTOSIZE);
-    imshow("image", image);
-    waitKey(0);
+    
+    AdjacencyList adjList = generateGraph(image, extraction);
+    for (const auto& [key, head] : adjList) {
+        cout << "Node (" << key.first << ", " << key.second << "):";
+        shared_ptr<ListNode> current = head;
+
+        while (current) {
+            cout << " -> (" << current->x << ", " << current->y << "), weight: " << current->weight;
+            current = current->next;
+        }
+        cout << endl;
+    }
+
     return 0;
 }
