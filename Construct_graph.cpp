@@ -41,13 +41,13 @@ struct ListNode {
 
 // 创建邻接表的辅助函数
 std::shared_ptr<ListNode> createAdjacencyList(const PixelFeature& feature, cv::Mat& image, const std::vector<std::vector<PixelFeature>>& features, AdjacencyList& adjList) {
-    std::string nodeName = "(" + std::to_string(feature.position.x) + ", " + std::to_string(feature.position.y) + ")";
-    std::shared_ptr<ListNode> head = std::make_shared<ListNode>(nodeName, 0);
-    std::shared_ptr<ListNode> current = head;
-
     int x = feature.position.x;
     int y = feature.position.y;
-    int dx[] = {0, 1, 0, -1}; // 右、下、左、上
+
+    std::shared_ptr<ListNode> head = std::make_shared<ListNode>(x, y, 0);  //Header of the current node
+    std::shared_ptr<ListNode> current = head;
+
+    int dx[] = {0, 1, 0, -1};  // Right, down, left, up.
     int dy[] = {-1, 0, 1, 0};
 
     for (int i = 0; i < 4; ++i) {
@@ -56,14 +56,17 @@ std::shared_ptr<ListNode> createAdjacencyList(const PixelFeature& feature, cv::M
 
         if (nx >= 0 && nx < image.cols && ny >= 0 && ny < image.rows) {
             const PixelFeature& neighborFeature = features[ny][nx];
-            int weight = calculate3DSimilarityWeight(feature, neighborFeature);
-            std::string neighborName = "(" + std::to_string(nx) + ", " + std::to_string(ny) + ")";
+            int weight = calculateSimilarityWeight(feature, neighborFeature);
 
-            std::shared_ptr<ListNode> newNode = std::make_shared<ListNode>(neighborName, weight);
+            std::shared_ptr<ListNode> newNode = std::make_shared<ListNode>(nx, ny, weight);
             current->next = newNode;
             current = newNode;
         }
     }
+
+    adjList[{x, y}] = head->next;  // Save only neighbouring nodes
+    return head;
+}
 
     adjList[nodeName] = head->next;  // 不保存当前节点自身，只保存其邻居节点
     return head;
