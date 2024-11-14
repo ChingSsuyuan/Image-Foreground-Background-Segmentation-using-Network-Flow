@@ -37,34 +37,23 @@ struct ListNode {
 };
 
 // 创建链表的辅助函数
-std::shared_ptr<ListNode> createAdjacencyList(int x, int y, cv::Mat& image) {
-    // 当前像素颜色特征
-    cv::Vec3b pixelColor = image.at<cv::Vec3b>(y, x); // 注意OpenCV中的行列顺序
-    PixelFeature feature(pixelColor[2], pixelColor[1], pixelColor[0]);
-
-    // 头节点，名字是当前节点坐标 (x, y)
-    std::shared_ptr<ListNode> head = std::make_shared<ListNode>("(" + std::to_string(x) + ", " + std::to_string(y) + ")", 0);
+std::shared_ptr<ListNode> createAdjacencyList(const PixelFeature& feature, cv::Mat& image, const std::vector<std::vector<PixelFeature>>& features) {
+    std::shared_ptr<ListNode> head = std::make_shared<ListNode>("(" + std::to_string(feature.position.x) + ", " + std::to_string(feature.position.y) + ")", 0);
     std::shared_ptr<ListNode> current = head;
 
-    // 上下左右四个方向的坐标偏移
+    int x = feature.position.x;
+    int y = feature.position.y;
     int dx[] = {0, 1, 0, -1}; // 右、下、左、上
     int dy[] = {-1, 0, 1, 0};
-    
-    // 遍历上下左右四个方向
+
     for (int i = 0; i < 4; ++i) {
         int nx = x + dx[i];
         int ny = y + dy[i];
 
-        // 检查边界条件
         if (nx >= 0 && nx < image.cols && ny >= 0 && ny < image.rows) {
-            // 获取相邻点的颜色特征
-            cv::Vec3b neighborColor = image.at<cv::Vec3b>(ny, nx);
-            PixelFeature neighborFeature(neighborColor[2], neighborColor[1], neighborColor[0]);
-
-            // 计算相似性权重
+            const PixelFeature& neighborFeature = features[ny][nx];
             int weight = calculate3DSimilarityWeight(feature, neighborFeature);
 
-            // 创建新链表节点并连接
             std::shared_ptr<ListNode> newNode = std::make_shared<ListNode>("(" + std::to_string(nx) + ", " + std::to_string(ny) + ")", weight);
             current->next = newNode;
             current = newNode;
@@ -73,6 +62,7 @@ std::shared_ptr<ListNode> createAdjacencyList(int x, int y, cv::Mat& image) {
     
     return head;
 }
+
 
 // 插入节点（根据颜色相似度权重进行排序）
 // std::shared_ptr<BSTNode> BST::insertNode(std::shared_ptr<BSTNode> node, const PixelFeature& feature) {
