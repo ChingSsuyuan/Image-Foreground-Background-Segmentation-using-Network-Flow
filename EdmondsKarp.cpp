@@ -39,7 +39,7 @@ bool bfs(const AdjacencyList& adjList, std::pair<int, int> source, std::pair<int
 }
 
 // Edmonds-Karp 最大流算法实现
-int edmondsKarp(AdjacencyList& adjList, std::pair<int, int> source, std::pair<int, int> sink) {
+int edmondsKarp(AdjacencyList& adjList, std::pair<int, int> source, std::pair<int, int> sink, std::shared_ptr<ReachableNode>& reachableNodes) {
     std::unordered_map<std::pair<int, int>, std::pair<int, int>, PairHash> parent;
     int maxFlow = 0;
 
@@ -85,5 +85,8 @@ int edmondsKarp(AdjacencyList& adjList, std::pair<int, int> source, std::pair<in
         maxFlow += pathFlow;
     }
 
-    return maxFlow;
+    // 获取从 source 可达的所有节点，存储在链表中
+    reachableNodes = getReachableNodes(adjList, source);
+
+    return ReachableNode;
 }
