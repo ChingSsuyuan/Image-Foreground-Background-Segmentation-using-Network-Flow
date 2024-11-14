@@ -1,6 +1,7 @@
 #include "EdmondsKarp.h"
 #include <queue>
 #include <climits>
+#include <unordered_set>
 
 struct ReachableNode {
     int x, y;
