@@ -18,14 +18,14 @@ int main() {
         cout << "This is en empty image"<<endl;
         return -1;
     }
-    vector<vector<PixelFeature>> extraction = extractFeatures(image);
-    for (vector<PixelFeature> i : extraction){
-        for (PixelFeature j : i){
-            cout << "colorRGB " <<j.colorRGB << endl;
-            cout << "gradientMagnitude " << j.gradientMagnitude << endl;
-            cout << "position " << j.position << endl;
-        }
-    }
+    // vector<vector<PixelFeature>> extraction = extractFeatures(image);
+    // for (vector<PixelFeature> i : extraction){
+    //     for (PixelFeature j : i){
+    //         cout << "colorRGB " <<j.colorRGB << endl;
+    //         cout << "gradientMagnitude " << j.gradientMagnitude << endl;
+    //         cout << "position " << j.position << endl;
+    //     }
+    // }
     
     AdjacencyList adjList = generateGraph(image, extraction);
     for (const auto& [key, head] : adjList) {
