@@ -50,9 +50,9 @@ int main() {
     }
     std::shared_ptr<ReachableNode> reachableNodes = nullptr;
 
-    edmondsKarp(adjList, source, sink, reachableNodes);
+    edmondsKarp(adjList, {image.cols/2, image.rows/2}, {0, 0}, reachableNodes);
 
-    std::cout << "Reachable nodes from source (" << source.first << ", " << source.second << "):\n";
+    std::cout << "Reachable nodes from source (" << image.cols/2 << ", " << image.rows/2 << "):\n";
     printReachableNodes(reachableNodes);
 
     
