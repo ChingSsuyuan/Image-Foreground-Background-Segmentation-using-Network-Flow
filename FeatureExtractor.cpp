@@ -3,7 +3,11 @@
 #include <vector>
 
 using namespace cv;
-
+// struct PixelFeature {
+//     Vec3b colorRGB;
+//     Point position;
+//     float gradientMagnitude; // 梯度幅值
+// };
 std::vector<std::vector<PixelFeature>> extractFeatures(const Mat& image) {
     Mat gray, gradX, gradY, gradMag;
 
