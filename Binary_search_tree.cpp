@@ -3,6 +3,7 @@
 #include <cmath>
 #include <memory>
 #include <string>
+#include "BST.h"
 
 const int C = 100; // Constant for amplifying weights
 const double SIGMA = 10.0; // Parameters controlling the decay rate
