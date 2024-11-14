@@ -1,83 +1,45 @@
-#include "EdmondsKarp.h"
-#include <queue>
-#include <climits>
+#include "FeatureExtractor.h"
+#include <opencv2/opencv.hpp>
+#include <vector>
 
-// BFS 寻找增广路径，返回是否找到增广路径
-bool bfs(const AdjacencyList& adjList, std::pair<int, int> source, std::pair<int, int> sink,
-         std::unordered_map<std::pair<int, int>, std::pair<int, int>, PairHash>& parent) {
-    std::queue<std::pair<int, int>> queue;
-    std::unordered_map<std::pair<int, int>, bool, PairHash> visited;
+using namespace cv;
+// struct PixelFeature {
+//     Vec3b colorRGB;
+//     Point position;
+//     float gradientMagnitude; // 梯度幅值
+// };
+std::vector<std::vector<PixelFeature>> extractFeatures(const Mat& image) {
+    Mat gray, gradX, gradY, gradMag;
 
-    queue.push(source);
-    visited[source] = true;
+    cvtColor(image, gray, COLOR_BGR2GRAY);
 
-    while (!queue.empty()) {
-        auto u = queue.front();
-        queue.pop();
+    // 计算 x 和 y 方向上的梯度
+    Sobel(gray, gradX, CV_32F, 1, 0, 3);  // x 方向梯度
+    Sobel(gray, gradY, CV_32F, 0, 1, 3);  // y 方向梯度
 
-        std::shared_ptr<ListNode> node = adjList.at(u);
-        while (node) {
-            std::pair<int, int> v = {node->x, node->y};
+    // 计算梯度幅值
+    magnitude(gradX, gradY, gradMag);  // 计算梯度幅值
+    
+    // 初始化特征矩阵
+    std::vector<std::vector<PixelFeature>> features(image.rows, std::vector<PixelFeature>(image.cols));
 
-            if (!visited[v] && node->weight > 0) {
-                queue.push(v);
-                visited[v] = true;
-                parent[v] = u;
-
-                if (v == sink) return true;
-            }
-            node = node->next;
+    for (int y = 0; y < image.rows; ++y) {
+        for (int x = 0; x < image.cols; ++x) {
+            PixelFeature pf;
+            
+            // 颜色信息
+            pf.colorRGB = image.at<Vec3b>(y, x);
+            
+            // 位置
+            pf.position = Point(x, y);
+            
+            // 梯度幅值
+            pf.gradientMagnitude = gradMag.at<float>(y, x);  // 获取该点的梯度幅值
+            
+            // 保存特征信息
+            features[y][x] = pf;
         }
     }
-    return false;
-}
 
-// Edmonds-Karp 最大流算法实现
-int edmondsKarp(AdjacencyList& adjList, std::pair<int, int> source, std::pair<int, int> sink) {
-    std::unordered_map<std::pair<int, int>, std::pair<int, int>, PairHash> parent;
-    int maxFlow = 0;
-
-    // 寻找增广路径并计算流量
-    while (bfs(adjList, source, sink, parent)) {
-        int pathFlow = INT_MAX;
-
-        // 找到路径上的最小容量
-        for (auto v = sink; v != source; v = parent[v]) {
-            auto u = parent[v];
-            auto node = adjList[u];
-
-            while (node && (node->x != v.first || node->y != v.second)) {
-                node = node->next;
-            }
-            if (node) pathFlow = std::min(pathFlow, node->weight);
-        }
-
-        // 更新残余图
-        for (auto v = sink; v != source; v = parent[v]) {
-            auto u = parent[v];
-
-            auto node = adjList[u];
-            while (node && (node->x != v.first || node->y != v.second)) {
-                node = node->next;
-            }
-            if (node) node->weight -= pathFlow;
-
-            // 更新反向边
-            auto reverseNode = adjList[v];
-            while (reverseNode && (reverseNode->x != u.first || reverseNode->y != u.second)) {
-                reverseNode = reverseNode->next;
-            }
-            if (reverseNode) reverseNode->weight += pathFlow;
-            else {
-                // 若反向边不存在，创建新的反向边
-                std::shared_ptr<ListNode> newNode = std::make_shared<ListNode>(u.first, u.second, pathFlow);
-                newNode->next = adjList[v];
-                adjList[v] = newNode;
-            }
-        }
-
-        maxFlow += pathFlow;
-    }
-
-    return maxFlow;
+    return features;
 }
