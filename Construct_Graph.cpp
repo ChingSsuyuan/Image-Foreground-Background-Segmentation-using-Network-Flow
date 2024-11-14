@@ -26,6 +26,7 @@ int calculateSimilarityWeight(const PixelFeature& feature1, const PixelFeature& 
     double gradDistance = std::abs(feature1.gradientMagnitude - feature2.gradientMagnitude);
     
     int weight = static_cast<int>(C * std::exp(-(ALPHA * (rgbDistance / SIGMA_RGB) + BETA * (gradDistance / SIGMA_GRAD))));
+    weight = std::clamp(weight, 1, 100);
     return weight;
 }
 
