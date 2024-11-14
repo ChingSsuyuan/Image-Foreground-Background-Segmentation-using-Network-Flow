@@ -5,6 +5,7 @@
 #include <string>
 #include "BST.h"
 #include "FeatureExtractor.h"
+
 const int C = 100;           // 权重放大常数
 const double SIGMA_RGB = 10.0;  // RGB 距离衰减系数
 const double SIGMA_GRAD = 5.0;  // 梯度幅值距离衰减系数
