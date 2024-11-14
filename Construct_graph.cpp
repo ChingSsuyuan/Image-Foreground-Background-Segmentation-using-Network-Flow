@@ -36,7 +36,7 @@ struct ListNode {
     int weight;                 // Weights to neighbouring points
     std::shared_ptr<ListNode> next; // Points to the next node in the chain
 
-    ListNode(int x_, int y_, int w) : x(x_), y(y_), weight(w), next(nullptr) {}
+    ListNode(int x, int y, int w) : x(x), y(y), weight(w), next(nullptr) {}
 };
 
 // Helper Functions for Creating Neighbourhood Tables

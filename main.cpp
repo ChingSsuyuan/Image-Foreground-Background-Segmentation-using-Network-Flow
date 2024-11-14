@@ -7,7 +7,7 @@ using namespace cv;
 using namespace std;
 int main() {
     
-    string path = "Pictures/p4.png";
+    string path = "Pictures/3x3_image.png";
     Mat image = imread(path, IMREAD_COLOR);
 
     if (!image.data)
