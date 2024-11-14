@@ -1,31 +1,66 @@
 #include <opencv2/opencv.hpp>
-#include "FeatureExtractor.h"
 #include <iostream>
+#include "FeatureExtractor.h"
+// #include "BST.h"
 
 using namespace cv;
 using namespace std;
-
 int main() {
-    // 读取图像
-    Mat image = imread("Image-Foreground-Background-Segmentation-using-Network-Flow-main/Pictures/wallhaven-p8yedm_1920x1080.png"); // 替换为图像的实际路径
+    
+    string path = "Pictures/p4.png";
+    Mat image = imread(path, IMREAD_COLOR);
 
-    if (image.empty()) {
-        cout << "图像加载失败，请检查路径。" << endl;
+    if (!image.data)
+    {
+        cout << "This is en empty image"<<endl;
         return -1;
     }
-
-    // 调用特征提取函数
-    vector<vector<PixelFeature>> features = extractFeatures(image);
-
-    // 打印一些特征信息（示例）
-    for (int y = 0; y < image.rows; y += 10) { // 每10行打印一次，避免输出过多
-        for (int x = 0; x < image.cols; x += 10) { // 每10列打印一次
-            PixelFeature pf = features[y][x];
-            cout << "位置: (" << pf.position.x << ", " << pf.position.y << "), ";
-            cout << "颜色: (" << (int)pf.colorRGB[0] << ", " << (int)pf.colorRGB[1] << ", " << (int)pf.colorRGB[2] << "), ";
-            cout << "梯度幅值: " << pf.gradientMagnitude << endl;
+    vector<vector<PixelFeature>> extraction = extractFeatures(image);
+    for (vector<PixelFeature> i : extraction){
+        for (PixelFeature j : i){
+            cout << "colorRGB " <<j.colorRGB << endl;
+            cout << "gradientMagnitude " << j.gradientMagnitude << endl;
+            cout << "position " << j.position << endl;
         }
     }
+    namedWindow("image", WINDOW_AUTOSIZE);
+    imshow("image", image);
+    waitKey(0);
+
+    // vector<vector<PixelFeature>> extracted = extractFeatures(image);
+
+    // Mat gradMag; // 假设梯度幅值已计算
+    // // 生成特征矩阵
+    // std::vector<std::vector<PixelFeature>> features(image.rows, std::vector<PixelFeature>(image.cols));
+    // for (int y = 0; y < image.rows; ++y) {
+    //     for (int x = 0; x < image.cols; ++x) {
+    //         cv::Vec3b color = image.at<cv::Vec3b>(y, x);
+    //         float gradient = gradMag.at<float>(y, x);
+    //         features[y][x] = PixelFeature(color, cv::Point(x, y), gradient);
+    //     }
+    // }
+
+    // // 使用邻接表结合哈希表存储图像的邻接信息
+    // std::unordered_map<std::string, std::shared_ptr<ListNode>> adjacencyList;
+
+    // for (int y = 0; y < image.rows; ++y) {
+    //     for (int x = 0; x < image.cols; ++x) {
+    //         PixelFeature& pf = features[y][x];
+    //         std::string nodeName = "(" + std::to_string(pf.position.x) + ", " + std::to_string(pf.position.y) + ")";
+    //         adjacencyList[nodeName] = createAdjacencyList(pf, features, image.rows, image.cols);
+    //     }
+    // }
+
+    // // 打印邻接表
+    // for (const auto& entry : adjacencyList) {
+    //     std::cout << "像素 " << entry.first << " 的邻接点:" << std::endl;
+    //     std::shared_ptr<ListNode> current = entry.second;
+    //     while (current) {
+    //         std::cout << " -> " << current->name << " [权重: " << current->weight << "]";
+    //         current = current->next;
+    //     }
+    //     std::cout << std::endl;
+    // }
 
     return 0;
 }
