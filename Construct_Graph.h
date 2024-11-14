@@ -6,15 +6,6 @@
 #include <unordered_map>
 #include <vector>
 
-// PixelFeature 结构，用于表示像素特征
-struct PixelFeature {
-    cv::Point position;       // 像素位置
-    cv::Vec3b colorRGB;       // 像素的 RGB 值
-    double gradientMagnitude; // 梯度幅值
-
-    PixelFeature(int x, int y, const cv::Vec3b& color, double gradient)
-        : position(x, y), colorRGB(color), gradientMagnitude(gradient) {}
-};
 
 // PairHash，用于为 std::pair<int, int> 定义哈希
 struct PairHash {

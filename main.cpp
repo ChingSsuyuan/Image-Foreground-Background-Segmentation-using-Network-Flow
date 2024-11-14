@@ -18,7 +18,7 @@ int main() {
         cout << "This is en empty image"<<endl;
         return -1;
     }
-    // vector<vector<PixelFeature>> extraction = extractFeatures(image);
+    vector<vector<PixelFeature>> extraction = extractFeatures(image);
     // for (vector<PixelFeature> i : extraction){
     //     for (PixelFeature j : i){
     //         cout << "colorRGB " <<j.colorRGB << endl;

@@ -5,30 +5,13 @@
 #include <string>
 #include "FeatureExtractor.h"
 #include <unordered_map>
+#include "Construct_Graph.h"
 
 const int C = 100;              // Weight amplification constant
 const double SIGMA_RGB = 10.0;  // RGB Distance attenuation factor
 const double SIGMA_GRAD = 5.0;  // Gradient amplitude distance attenuation factor
 const double ALPHA = 0.5;       // RGB Weighting of Differences
 const double BETA = 0.5;        // Weighting of gradient differences
-
-// PairHash for hashing std::pair<int, int>
-struct PairHash {
-    template <class T1, class T2>
-    std::size_t operator()(const std::pair<T1, T2>& p) const {
-        return std::hash<T1>()(p.first) ^ std::hash<T2>()(p.second);
-    }
-};
-
-// Linked list node structure
-struct ListNode {
-    int x;                      // Node x-coordinate
-    int y;                      // Node y-coordinate
-    int weight;                 // Weights to neighbouring points
-    std::shared_ptr<ListNode> next; // Points to the next node in the chain
-
-    ListNode(int x, int y, int w) : x(x), y(y), weight(w), next(nullptr) {}
-};
 
 // Type alias for adjacency list with custom PairHash
 using AdjacencyList = std::unordered_map<std::pair<int, int>, std::shared_ptr<ListNode>, PairHash>;
