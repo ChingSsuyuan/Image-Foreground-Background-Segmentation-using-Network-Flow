@@ -1,57 +1,79 @@
 #include "EdmondsKarp.h"
-#include <vector>
 #include <queue>
 #include <climits>
 
-// Constructor to initialise the capacity matrix of the graph
-EdmondsKarp::EdmondsKarp(int numVertices) : numVertices(numVertices), capacityGraph(numVertices, std::vector<int>(numVertices, 0)) {}
+// BFS 寻找增广路径，返回是否找到增广路径
+bool bfs(const AdjacencyList& adjList, std::pair<int, int> source, std::pair<int, int> sink,
+         std::unordered_map<std::pair<int, int>, std::pair<int, int>, PairHash>& parent) {
+    std::queue<std::pair<int, int>> queue;
+    std::unordered_map<std::pair<int, int>, bool, PairHash> visited;
 
-// Adding an edge with capacity
-void EdmondsKarp::addEdge(int u, int v, int capacity) {
-    capacityGraph[u][v] = capacity;
-}
-
-// Use BFS to find the augmented path and update the parent node on the path
-bool EdmondsKarp::bfs(int source, int sink, std::vector<int>& parent) {
-    std::vector<bool> visited(numVertices, false);
-    std::queue<int> q;
-    q.push(source);
+    queue.push(source);
     visited[source] = true;
-    parent[source] = -1;
 
-    while (!q.empty()) {
-        int u = q.front();
-        q.pop();
+    while (!queue.empty()) {
+        auto u = queue.front();
+        queue.pop();
 
-        for (int v = 0; v < numVertices; ++v) {
-            if (!visited[v] && capacityGraph[u][v] > 0) { // Remaining capacity exists and has not been accessed
-                q.push(v);
-                parent[v] = u;
+        std::shared_ptr<ListNode> node = adjList.at(u);
+        while (node) {
+            std::pair<int, int> v = {node->x, node->y};
+
+            if (!visited[v] && node->weight > 0) {
+                queue.push(v);
                 visited[v] = true;
-                if (v == sink) return true; //Reach the meeting point, return true
+                parent[v] = u;
+
+                if (v == sink) return true;
             }
+            node = node->next;
         }
     }
-    return false; // No enhancement path
+    return false;
 }
 
-// Calculate maximum flow
-int EdmondsKarp::maxFlow(int source, int sink) {
+// Edmonds-Karp 最大流算法实现
+int edmondsKarp(AdjacencyList& adjList, std::pair<int, int> source, std::pair<int, int> sink) {
+    std::unordered_map<std::pair<int, int>, std::pair<int, int>, PairHash> parent;
     int maxFlow = 0;
-    std::vector<std::vector<int>> residualGraph = capacityGraph;
-    std::vector<int> parent(numVertices);
 
-    while (bfs(source, sink, parent)) {
+    // 寻找增广路径并计算流量
+    while (bfs(adjList, source, sink, parent)) {
         int pathFlow = INT_MAX;
-        for (int v = sink; v != source; v = parent[v]) {
-            int u = parent[v];
-            pathFlow = std::min(pathFlow, residualGraph[u][v]);
+
+        // 找到路径上的最小容量
+        for (auto v = sink; v != source; v = parent[v]) {
+            auto u = parent[v];
+            auto node = adjList[u];
+
+            while (node && (node->x != v.first || node->y != v.second)) {
+                node = node->next;
+            }
+            if (node) pathFlow = std::min(pathFlow, node->weight);
         }
 
-        for (int v = sink; v != source; v = parent[v]) {
-            int u = parent[v];
-            residualGraph[u][v] -= pathFlow;
-            residualGraph[v][u] += pathFlow;
+        // 更新残余图
+        for (auto v = sink; v != source; v = parent[v]) {
+            auto u = parent[v];
+
+            auto node = adjList[u];
+            while (node && (node->x != v.first || node->y != v.second)) {
+                node = node->next;
+            }
+            if (node) node->weight -= pathFlow;
+
+            // 更新反向边
+            auto reverseNode = adjList[v];
+            while (reverseNode && (reverseNode->x != u.first || reverseNode->y != u.second)) {
+                reverseNode = reverseNode->next;
+            }
+            if (reverseNode) reverseNode->weight += pathFlow;
+            else {
+                // 若反向边不存在，创建新的反向边
+                std::shared_ptr<ListNode> newNode = std::make_shared<ListNode>(u.first, u.second, pathFlow);
+                newNode->next = adjList[v];
+                adjList[v] = newNode;
+            }
         }
 
         maxFlow += pathFlow;
