@@ -4,21 +4,28 @@
 #include <memory>
 #include <string>
 #include "BST.h"
+#include "FeatureExtractor.h"
+const int C = 100;           // 权重放大常数
+const double SIGMA_RGB = 10.0;  // RGB 距离衰减系数
+const double SIGMA_GRAD = 5.0;  // 梯度幅值距离衰减系数
+const double ALPHA = 0.5;    // RGB 差异的权重
+const double BETA = 0.5;     // 梯度差异的权重
 
-const int C = 100; // Constant for amplifying weights
-const double SIGMA = 10.0; // Parameters controlling the decay rate
-
-int calculate3DSimilarityWeight(const PixelFeature & feature1, const PixelFeature & feature2) {
-    int dx = feature1.color[0] - feature2.color[0];
-    int dy = feature1.color[1] - feature2.color[1];
-    int dz = feature1.color[2] - feature2.color[2];
-    double distance = std::sqrt(dx * dx + dy * dy + dz * dz);
+// 计算 3D 相似度权重，结合 RGB 差异和梯度差异
+int calculateSimilarityWeight(const PixelFeature& feature1, const PixelFeature& feature2) {
+    // 计算 RGB 差异
+    int dx = feature1.colorRGB[0] - feature2.colorRGB[0];
+    int dy = feature1.colorRGB[1] - feature2.colorRGB[1];
+    int dz = feature1.colorRGB[2] - feature2.colorRGB[2];
+    double rgbDistance = std::sqrt(dx * dx + dy * dy + dz * dz);
     
-    //Inverse Exponential Similarity Calculation
-    int weight = static_cast<int>(C * std::exp(-distance / SIGMA));
+    // 计算梯度差异
+    double gradDistance = std::abs(feature1.gradientMagnitude - feature2.gradientMagnitude);
+    
+    // 综合计算权重
+    int weight = static_cast<int>(C * std::exp(- (ALPHA * (rgbDistance / SIGMA_RGB) + BETA * (gradDistance / SIGMA_GRAD))));
     return weight;
 }
-
 // 链表节点结构体
 struct ListNode {
     std::string name;            // 节点名字 (x, y)
