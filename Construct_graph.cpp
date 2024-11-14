@@ -56,7 +56,7 @@ std::shared_ptr<ListNode> createAdjacencyList(const PixelFeature& feature, cv::M
 
         if (nx >= 0 && nx < image.cols && ny >= 0 && ny < image.rows) {
             const PixelFeature& neighborFeature = features[ny][nx];
-            int weight = calculate3DSimilarityWeight(feature, neighborFeature);
+            int weight = calculateSimilarityWeight(feature, neighborFeature);
             std::string neighborName = "(" + std::to_string(nx) + ", " + std::to_string(ny) + ")";
 
             std::shared_ptr<ListNode> newNode = std::make_shared<ListNode>(neighborName, weight);
@@ -83,11 +83,11 @@ AdjacencyList generateGraph(cv::Mat& image, const std::vector<std::vector<PixelF
 }
 
 // 插入接口函数
-void BST::insert(const PixelFeature& feature) {
-    root = insertNode(root, feature);
-}
+// void BST::insert(const PixelFeature& feature) {
+//     root = insertNode(root, feature);
+// }
 
-// 外部调用的中序遍历接口
-void BST::inorderTraversal() const {
-    inorderTraversal(root);
-}
+// // 外部调用的中序遍历接口
+// void BST::inorderTraversal() const {
+//     inorderTraversal(root);
+// }
