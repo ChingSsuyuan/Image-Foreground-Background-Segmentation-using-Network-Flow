@@ -26,6 +26,9 @@ int calculateSimilarityWeight(const PixelFeature& feature1, const PixelFeature& 
     int weight = static_cast<int>(C * std::exp(- (ALPHA * (rgbDistance / SIGMA_RGB) + BETA * (gradDistance / SIGMA_GRAD))));
     return weight;
 }
+// 使用哈希表来存储邻接表
+using AdjacencyList = std::unordered_map<std::string, std::shared_ptr<ListNode>>;
+
 // 链表节点结构体
 struct ListNode {
     std::string name;            // 节点名字 (x, y)
