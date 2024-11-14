@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include "FeatureExtractor.h"
+#include <unordered_map>
 
 const int C = 100;           // 权重放大常数
 const double SIGMA_RGB = 10.0;  // RGB 距离衰减系数
@@ -38,9 +39,10 @@ struct ListNode {
     ListNode(const std::string& n, int w) : name(n), weight(w), next(nullptr) {}
 };
 
-// 创建链表的辅助函数
-std::shared_ptr<ListNode> createAdjacencyList(const PixelFeature& feature, cv::Mat& image, const std::vector<std::vector<PixelFeature>>& features) {
-    std::shared_ptr<ListNode> head = std::make_shared<ListNode>("(" + std::to_string(feature.position.x) + ", " + std::to_string(feature.position.y) + ")", 0);
+// 创建邻接表的辅助函数
+std::shared_ptr<ListNode> createAdjacencyList(const PixelFeature& feature, cv::Mat& image, const std::vector<std::vector<PixelFeature>>& features, AdjacencyList& adjList) {
+    std::string nodeName = "(" + std::to_string(feature.position.x) + ", " + std::to_string(feature.position.y) + ")";
+    std::shared_ptr<ListNode> head = std::make_shared<ListNode>(nodeName, 0);
     std::shared_ptr<ListNode> current = head;
 
     int x = feature.position.x;
@@ -55,24 +57,30 @@ std::shared_ptr<ListNode> createAdjacencyList(const PixelFeature& feature, cv::M
         if (nx >= 0 && nx < image.cols && ny >= 0 && ny < image.rows) {
             const PixelFeature& neighborFeature = features[ny][nx];
             int weight = calculate3DSimilarityWeight(feature, neighborFeature);
+            std::string neighborName = "(" + std::to_string(nx) + ", " + std::to_string(ny) + ")";
 
-            std::shared_ptr<ListNode> newNode = std::make_shared<ListNode>("(" + std::to_string(nx) + ", " + std::to_string(ny) + ")", weight);
+            std::shared_ptr<ListNode> newNode = std::make_shared<ListNode>(neighborName, weight);
             current->next = newNode;
             current = newNode;
         }
     }
-    
+
+    adjList[nodeName] = head->next;  // 不保存当前节点自身，只保存其邻居节点
     return head;
 }
 
-std::unordered_map<std::string, std::shared_ptr<ListNode>> adjacencyList;
+// 示例：生成整张图的邻接表
+AdjacencyList generateGraph(cv::Mat& image, const std::vector<std::vector<PixelFeature>>& features) {
+    AdjacencyList adjList;
+
     for (int y = 0; y < image.rows; ++y) {
         for (int x = 0; x < image.cols; ++x) {
-            PixelFeature& pf = features[y][x];
-            std::string nodeName = "(" + std::to_string(pf.position.x) + ", " + std::to_string(pf.position.y) + ")";
-            adjacencyList[nodeName] = createAdjacencyList(pf, features, image.rows, image.cols);
+            createAdjacencyList(features[y][x], image, features, adjList);
         }
     }
+
+    return adjList;
+}
 
 // 插入接口函数
 void BST::insert(const PixelFeature& feature) {
