@@ -39,15 +39,15 @@ struct ListNode {
     ListNode(int x_, int y_, int w) : x(x_), y(y_), weight(w), next(nullptr) {}
 };
 
-// 创建邻接表的辅助函数
+// Helper Functions for Creating Neighbourhood Tables
 std::shared_ptr<ListNode> createAdjacencyList(const PixelFeature& feature, cv::Mat& image, const std::vector<std::vector<PixelFeature>>& features, AdjacencyList& adjList) {
-    std::string nodeName = "(" + std::to_string(feature.position.x) + ", " + std::to_string(feature.position.y) + ")";
-    std::shared_ptr<ListNode> head = std::make_shared<ListNode>(nodeName, 0);
-    std::shared_ptr<ListNode> current = head;
-
     int x = feature.position.x;
     int y = feature.position.y;
-    int dx[] = {0, 1, 0, -1}; // 右、下、左、上
+
+    std::shared_ptr<ListNode> head = std::make_shared<ListNode>(x, y, 0);  //Header of the current node
+    std::shared_ptr<ListNode> current = head;
+
+    int dx[] = {0, 1, 0, -1};  // Right, down, left, up.
     int dy[] = {-1, 0, 1, 0};
 
     for (int i = 0; i < 4; ++i) {
@@ -57,19 +57,18 @@ std::shared_ptr<ListNode> createAdjacencyList(const PixelFeature& feature, cv::M
         if (nx >= 0 && nx < image.cols && ny >= 0 && ny < image.rows) {
             const PixelFeature& neighborFeature = features[ny][nx];
             int weight = calculateSimilarityWeight(feature, neighborFeature);
-            std::string neighborName = "(" + std::to_string(nx) + ", " + std::to_string(ny) + ")";
 
-            std::shared_ptr<ListNode> newNode = std::make_shared<ListNode>(neighborName, weight);
+            std::shared_ptr<ListNode> newNode = std::make_shared<ListNode>(nx, ny, weight);
             current->next = newNode;
             current = newNode;
         }
     }
 
-    adjList[nodeName] = head->next;  // 不保存当前节点自身，只保存其邻居节点
+    adjList[{x, y}] = head->next;  // Save only neighbouring nodes
     return head;
 }
 
-// 示例：生成整张图的邻接表
+// Generate an adjacency table for the whole graph
 AdjacencyList generateGraph(cv::Mat& image, const std::vector<std::vector<PixelFeature>>& features) {
     AdjacencyList adjList;
 
@@ -82,12 +81,3 @@ AdjacencyList generateGraph(cv::Mat& image, const std::vector<std::vector<PixelF
     return adjList;
 }
 
-// 插入接口函数
-// void BST::insert(const PixelFeature& feature) {
-//     root = insertNode(root, feature);
-// }
-
-// // 外部调用的中序遍历接口
-// void BST::inorderTraversal() const {
-//     inorderTraversal(root);
-// }
