@@ -1,4 +1,4 @@
 # Image Segmentation using Network Flow
 
 ## Segmentataion Flow Map :
-![p1](https://github.com/ChingSsuyuan/Image-Foreground-Background-Segmentation-using-Network-Flow/blob/a5663f7a1ac5c8f460893fcd50f9f65f1393283f/Pictures/p4.png)
+![p1](https://github.com/ChingSsuyuan/Image-Foreground-Background-Segmentation-using-Network-Flow/blob/8d2f15cf44abdb25035caabe3080d340ff72393e/Pictures/flow%20map.jpg)
