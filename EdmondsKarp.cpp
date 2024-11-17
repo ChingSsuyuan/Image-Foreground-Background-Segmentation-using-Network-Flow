@@ -68,16 +68,16 @@ std::shared_ptr<ReachableNode> getReachableNodes(const AdjacencyList& adjList, s
 
     return head;
 }
-// Edmonds-Karp 最大流算法实现
+// Edmonds-Karp Maximum Flow Algorithm Implementation
 std::shared_ptr<ReachableNode> edmondsKarp(AdjacencyList& adjList, std::pair<int, int> source, std::pair<int, int> sink, std::shared_ptr<ReachableNode>& reachableNodes) {
     std::unordered_map<std::pair<int, int>, std::pair<int, int>, PairHash> parent;
     int maxFlow = 0;
 
-    // 寻找增广路径并计算流量
+    // Finding the path to amplification and calculating traffic
     while (bfs(adjList, source, sink, parent)) {
         int pathFlow = INT_MAX;
 
-        // 找到路径上的最小容量
+        // Find the minimum capacity on the path
         for (auto v = sink; v != source; v = parent[v]) {
             auto u = parent[v];
             auto node = adjList[u];
@@ -88,7 +88,7 @@ std::shared_ptr<ReachableNode> edmondsKarp(AdjacencyList& adjList, std::pair<int
             if (node) pathFlow = std::min(pathFlow, node->weight);
         }
 
-        // 更新残余图
+        // Updating the residual map
         for (auto v = sink; v != source; v = parent[v]) {
             auto u = parent[v];
 
@@ -98,14 +98,14 @@ std::shared_ptr<ReachableNode> edmondsKarp(AdjacencyList& adjList, std::pair<int
             }
             if (node) node->weight -= pathFlow;
 
-            // 更新反向边
+            // Update Reverse Edge
             auto reverseNode = adjList[v];
             while (reverseNode && (reverseNode->x != u.first || reverseNode->y != u.second)) {
                 reverseNode = reverseNode->next;
             }
             if (reverseNode) reverseNode->weight += pathFlow;
             else {
-                // 若反向边不存在，创建新的反向边
+                // Update Reverse Edge
                 std::shared_ptr<ListNode> newNode = std::make_shared<ListNode>(u.first, u.second, pathFlow);
                 newNode->next = adjList[v];
                 adjList[v] = newNode;
@@ -115,7 +115,7 @@ std::shared_ptr<ReachableNode> edmondsKarp(AdjacencyList& adjList, std::pair<int
         maxFlow += pathFlow;
     }
 
-    // 获取从 source 可达的所有节点，存储在链表中
+    // Get all the nodes reachable from the source, stored in a chained table
     reachableNodes = getReachableNodes(adjList, source);
 
     return reachableNodes;
