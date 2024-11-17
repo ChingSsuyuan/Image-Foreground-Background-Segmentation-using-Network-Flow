@@ -14,11 +14,11 @@ struct ReachableNode {
     ReachableNode(int x_, int y_) : x(x_), y(y_), next(nullptr) {}
 };
 
-// BFS 寻找增广路径，返回是否找到增广路径
+// BFS seeks for an augmentation path, returns whether the augmentation path was found or not.
 bool bfs(const AdjacencyList& adjList, std::pair<int, int> source, std::pair<int, int> sink,
          std::unordered_map<std::pair<int, int>, std::pair<int, int>, PairHash>& parent);
 
-// Edmonds-Karp 算法，计算从 source 到 sink 的最大流
+// Edmonds-Karp algorithm to calculate the maximum flow from source to sink
 std::shared_ptr<ReachableNode> edmondsKarp(AdjacencyList& adjList, std::pair<int, int> source, std::pair<int, int> sink, std::shared_ptr<ReachableNode>& reachableNodes);
 
 #endif // EDMONDS_KARP_H
