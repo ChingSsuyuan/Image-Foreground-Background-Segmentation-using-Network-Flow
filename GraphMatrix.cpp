@@ -1,5 +1,5 @@
 #include "GraphMatrix.h"
-
+#include "FeatureExtractor.h"
 // 计算像素间的相似权重
 int calculateSimilarityWeight(const PixelFeature& feature1, const PixelFeature& feature2) {
     int dx = feature1.colorRGB[0] - feature2.colorRGB[0];
