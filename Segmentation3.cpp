@@ -175,6 +175,8 @@ Mat image = imread("Pictures/110*100.png");
     int source = (rows / 2) * cols + (cols / 2);  
     int sink = rows * cols - 1; 
     Graph graph(rows * cols); 
+    Vec3b sourceColor = image.at<Vec3b>(source / cols, source % cols);
+    Vec3b sinkColor = image.at<Vec3b>(sink / cols, sink % cols);
     for (int y = 0; y < rows; ++y) {
         for (int x = 0; x < cols; ++x) {
             int u = y * cols + x;  // 
@@ -199,7 +201,16 @@ Mat image = imread("Pictures/110*100.png");
 
     vector<int> S, T;
     graph.dinic(source, sink, S, T);
-    
+            Mat result = image.clone();
+        for (int i = 0; i < rows * cols; ++i) {
+            int y = i / cols;
+            int x = i % cols;
+            if (find(S.begin(), S.end(), i) != S.end()) {
+                result.at<Vec3b>(y, x) = sourceColor; 
+            } else {
+                result.at<Vec3b>(y, x) = sinkColor;   
+            }
+        }
     auto end = chrono::high_resolution_clock::now();
     chrono::duration<double> duration = end - start;
     cout << "Time taken: " << duration.count() << " seconds" << endl;
