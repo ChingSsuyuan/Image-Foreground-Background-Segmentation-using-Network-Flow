@@ -19,17 +19,16 @@ const int C = 100;
 const double SIGMA_RGB = 10.0;  
 const double ALPHA = 0.5;       
 
-// 计算两个像素点颜色的权重
 int Weight(const Vec3b& color1, const Vec3b& color2) {
     int dx = color1[0] - color2[0];
     int dy = color1[1] - color2[1];
     int dz = color1[2] - color2[2];
     double rgbDistance = std::sqrt(dx * dx + dy * dy + dz * dz);
-    int weight = static_cast<int>(C * std::exp(-rgbDistance)); // 这里采用颜色距离的指数函数计算权重
+    int weight = static_cast<int>(C * std::exp(-rgbDistance)); 
     return std::clamp(weight, 1, 100);
 }
 
-// 构建图像的权重矩阵
+
 std::vector<std::vector<std::vector<int>>> Build_Matrix(const Mat& image) {
     std::vector<std::vector<PixelFeature>> features(image.rows, std::vector<PixelFeature>(image.cols));
     std::vector<std::vector<std::vector<int>>> Matrix(image.rows, std::vector<std::vector<int>>(image.cols, std::vector<int>(4, 0)));
@@ -59,10 +58,10 @@ std::vector<std::vector<std::vector<int>>> Build_Matrix(const Mat& image) {
 
 class Graph {
 public:
-    int V;  // 顶点数
-    vector<vector<pair<int, int>>> adj;  // 邻接表，每个元素是一个<pair<邻接点, 权重>>
-    vector<vector<int>> capacity;  // 容量矩阵
-    vector<vector<int>> flow;      // 流量矩阵
+    int V; 
+    vector<vector<pair<int, int>>> adj; 
+    vector<vector<int>> capacity;  
+    vector<vector<int>> flow;      
 
     Graph(int V) : V(V) {
         adj.resize(V);
@@ -72,11 +71,11 @@ public:
 
     void addEdge(int u, int v, int cap) {
         adj[u].push_back({v, cap});
-        adj[v].push_back({u, 0});  // 反向边，容量为0
+        adj[v].push_back({u, 0});  
         capacity[u][v] = cap;
     }
 
-    // BFS构建层次图
+
     bool bfs(int source, vector<int>& level) {
         fill(level.begin(), level.end(), -1);
         queue<int> q;
@@ -95,9 +94,9 @@ public:
                 }
             }
         }
-        return level[V - 1] != -1;  // 如果汇点被标记，说明存在增广路径
+        return level[V - 1] != -1; 
     }
-    // DFS搜索增广路径
+
     int dfs(int u, int sink, vector<int>& level, vector<int>& ptr, int flowToPush) {
         if (u == sink) return flowToPush;
         
@@ -116,7 +115,7 @@ public:
         return 0;
     }
 
-    // 使用Dinic算法进行最大流计算
+  
     void dinic(int source, int sink, vector<int>& S, vector<int>& T) {
     int maxFlow = 0;
     vector<int> level(V);
@@ -155,7 +154,7 @@ public:
         }
     }
 
-    // 输出S和T的大小
+    
     cout << "Set S contains " << S.size() << " nodes." << endl;
     cout << "Set T contains " << T.size() << " nodes." << endl;
 }
@@ -178,41 +177,29 @@ Mat image = imread("Pictures/110*100.png");
     Graph graph(rows * cols); 
     for (int y = 0; y < rows; ++y) {
         for (int x = 0; x < cols; ++x) {
-            int u = y * cols + x;  // 当前像素的节点编号
+            int u = y * cols + x;  // 
             if (y > 0) {
-                int v = (y - 1) * cols + x;  // 上方像素的节点编号
-                graph.addEdge(u, v, Matrix[y][x][0]);  // 上
+                int v = (y - 1) * cols + x;  // 
+                graph.addEdge(u, v, Matrix[y][x][0]);  // 
             }
             if (y < rows - 1) {
-                int v = (y + 1) * cols + x;  // 下方像素的节点编号
-                graph.addEdge(u, v, Matrix[y][x][1]);  // 下
+                int v = (y + 1) * cols + x;  
+                graph.addEdge(u, v, Matrix[y][x][1]);  // 
             }
             if (x > 0) {
-                int v = y * cols + (x - 1);  // 左方像素的节点编号
-                graph.addEdge(u, v, Matrix[y][x][2]);  // 左
+                int v = y * cols + (x - 1);  
+                graph.addEdge(u, v, Matrix[y][x][2]);  
             }
             if (x < cols - 1) {
-                int v = y * cols + (x + 1);  // 右方像素的节点编号
-                graph.addEdge(u, v, Matrix[y][x][3]);  // 右
+                int v = y * cols + (x + 1);  
+                graph.addEdge(u, v, Matrix[y][x][3]);  
             }
         }
     }
 
-    // 运行 Dinic 算法
     vector<int> S, T;
     graph.dinic(source, sink, S, T);
     
-    // // 输出可达的节点集合S和T
-    // cout << "Set S (reachable nodes): ";
-    // for (int node : S) {
-    //     cout << node << " ";
-    // }
-    // cout << endl; 
-    // cout << "Set T : ";
-    // for (int node : T) {
-    //     cout << node << " ";
-    // }
-    // cout << endl;
     auto end = chrono::high_resolution_clock::now();
     chrono::duration<double> duration = end - start;
     cout << "Time taken: " << duration.count() << " seconds" << endl;
