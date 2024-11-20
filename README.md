@@ -2,9 +2,11 @@
 
 ## Segmentation Results:
 
-| ![Image 1](Pictures/280*200.png) | ![Image 2](Pictures/segmentation_result.png) |
-|------------------------|------------------------|
-| Original Image   | Segmentation image    |
+| ![Image 1](Pictures/280*200.png) | ![Image 2](Pictures/segmentation_result.png) | ![Image 4](Pictures/segmentation_result.png)|
+|------------------------|------------------------|-------------------|
+| Original Image   | Foreground Image    | Background Image |
 
 ## Segmentataion Flow Map :
-![p1](https://github.com/ChingSsuyuan/Image-Foreground-Background-Segmentation-using-Network-Flow/blob/8d2f15cf44abdb25035caabe3080d340ff72393e/Pictures/flow%20map.jpg)
+<div style="display: flex; justify-content: space-around;">
+  <img src="image1.png" width="45%" alt="Image 3"/>
+</div>
