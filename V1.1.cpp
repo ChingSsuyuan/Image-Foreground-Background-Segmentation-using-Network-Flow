@@ -190,16 +190,7 @@ int main() {
 
     vector<int> S, T;
     int maxFlow = graph.edmondsKarp(source, sink, S, T);
-    cout << "Set S (reachable nodes): ";
-    for (int node : S) {
-        cout << node << " ";
-    }
-    cout << endl; 
-    cout << "Set T : ";
-    for (int node : T) {
-        cout << node << " ";
-    }
-    cout << endl;
+
     Vec3b sourceColor = image.at<Vec3b>(source / cols, source % cols);
     Vec3b sinkColor = image.at<Vec3b>(sink / cols, sink % cols);
     auto end = chrono::high_resolution_clock::now();
