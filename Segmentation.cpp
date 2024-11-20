@@ -142,55 +142,6 @@ public:
     }
 };
 
-class Graph2 {
-public:
-    int V;  // number of vertices
-    vector<vector<int>> capacity;  // 容量矩阵
-    vector<vector<int>> flow;      // 流量矩阵
-    vector<vector<int>> adj;       // 邻接矩阵
-
-    Graph2(int V) : V(V) {
-        capacity = vector<vector<int>>(V, vector<int>(V, 0));
-        flow = vector<vector<int>>(V, vector<int>(V, 0));
-        adj = vector<vector<int>>(V);
-    }
-
-    void addEdge(int u, int v, int cap) {
-        capacity[u][v] = cap;
-        adj[u].push_back(v);
-        adj[v].push_back(u);  
-    }
-
-    // 找到从源节点可以到达的节点集合S，以及不能到达的节点集合T
-    void findReachableNodes(int source, vector<int>& S, vector<int>& T) {
-        vector<bool> visited(V, false);
-        queue<int> q;
-        q.push(source);
-        visited[source] = true;
-
-        // 使用BFS遍历图，找到所有可达的节点
-        while (!q.empty()) {
-            int u = q.front();
-            q.pop();
-            S.push_back(u);  // 加入集合S
-
-            for (int v : adj[u]) {
-                if (!visited[v] && capacity[u][v] > 0) {  // 有容量且未访问过
-                    visited[v] = true;
-                    q.push(v);
-                }
-            }
-        }
-
-        // 将所有未访问的节点加入集合T
-        for (int i = 0; i < V; ++i) {
-            if (!visited[i]) {
-                T.push_back(i);
-            }
-        }
-    }
-};
-
 int main() {
     Mat image = imread("Pictures/160*120.png");
 
@@ -201,38 +152,37 @@ int main() {
     int rows = image.rows;
     int cols = image.cols;
 
-    // 记录开始时间
+
     auto start = chrono::high_resolution_clock::now();
 
-    // 构建权重矩阵
+
     auto Matrix = Build_Matrix(image);
 
-    // 设置源节点为正中间的点
-    int source = (rows / 2) * cols + (cols / 2);  
-    int sink = rows * cols - 1;  // 右下角像素
 
-    // 创建图对象
+    int source = (rows / 2) * cols + (cols / 2);  
+    int sink = rows * cols - 1;  
+
+
     Graph graph(rows * cols); 
 
-    // 根据权重矩阵构建图的边
     for (int y = 0; y < rows; ++y) {
         for (int x = 0; x < cols; ++x) {
-            int u = y * cols + x;  // 当前像素的节点编号
+            int u = y * cols + x;  
             if (y > 0) {
-                int v = (y - 1) * cols + x;  // 上方像素的节点编号
-                graph.addEdge(u, v, Matrix[y][x][0]);  // 上
+                int v = (y - 1) * cols + x;  
+                graph.addEdge(u, v, Matrix[y][x][0]);  
             }
             if (y < rows - 1) {
-                int v = (y + 1) * cols + x;  // 下方像素的节点编号
-                graph.addEdge(u, v, Matrix[y][x][1]);  // 下
+                int v = (y + 1) * cols + x;  
+                graph.addEdge(u, v, Matrix[y][x][1]);  
             }
             if (x > 0) {
-                int v = y * cols + (x - 1);  // 左方像素的节点编号
-                graph.addEdge(u, v, Matrix[y][x][2]);  // 左
+                int v = y * cols + (x - 1);  
+                graph.addEdge(u, v, Matrix[y][x][2]);  
             }
             if (x < cols - 1) {
-                int v = y * cols + (x + 1);  // 右方像素的节点编号
-                graph.addEdge(u, v, Matrix[y][x][3]);  // 右
+                int v = y * cols + (x + 1);  
+                graph.addEdge(u, v, Matrix[y][x][3]);  
             }
         }
     }
@@ -251,10 +201,8 @@ int main() {
     }
     cout << endl;
 
-    // 记录结束时间
     auto end = chrono::high_resolution_clock::now();
 
-    // 计算并输出程序执行时间
     chrono::duration<double> duration = end - start;
     cout << "Time taken: " << duration.count() << " seconds" << endl;
     return 0;
