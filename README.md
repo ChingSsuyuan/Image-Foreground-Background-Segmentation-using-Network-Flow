@@ -2,7 +2,7 @@
 
 ## Segmentation Results:
 
-| ![Image 1](image1.png) | ![Image 2]([image2.png](https://github.com/ChingSsuyuan/Image-Foreground-Background-Segmentation-using-Network-Flow/blob/bb18281f6bb471c9a44f29230e8e8ee7d74990ec/Pictures/segmentation_result.png)) |
+| ![Image 1](image1.png) | ![Image 2]() |
 |------------------------|------------------------|
 | Original Image   | Segmentation image    |
 
