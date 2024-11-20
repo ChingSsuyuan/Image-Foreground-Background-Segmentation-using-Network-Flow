@@ -202,8 +202,27 @@ int main() {
     cout << endl;
 
     auto end = chrono::high_resolution_clock::now();
-
     chrono::duration<double> duration = end - start;
-    cout << "Time taken: " << duration.count() << " seconds" << endl;
+    cout << "Time: " << duration.count() << " seconds" << endl;
+        cout << "V1.1 Speed: " << (S.size()+T.size()) /duration.count()<< " nodes/second" << endl;
+        Mat result = image.clone();
+        Mat s_result = Mat::zeros(image.size(), image.type());
+        Mat t_result = Mat::zeros(image.size(), image.type());
+        for (int i = 0; i < rows * cols; ++i) {
+            int y = i / cols;
+            int x = i % cols;
+            if (find(S.begin(), S.end(), i) != S.end()) {
+                result.at<Vec3b>(y, x) = sourceColor; 
+                // s_result.at<Vec3b>(y, x) = image.at<Vec3b>(y, x);
+            } else {
+                result.at<Vec3b>(y, x) = sinkColor;   
+                // t_result.at<Vec3b>(y, x) = image.at<Vec3b>(y, x);
+            }
+        }
+    circle(result, Point(source % cols, source / cols), 1, Scalar(0, 255, 0), -1);
+    circle(result, Point(sink % cols, sink / cols), 1 , Scalar(0, 0, 255), -1);
+    imwrite("segmentation_result.png", result);
+    // imwrite("Foreground_result.png", s_result);
+    // imwrite("Background_result.png", t_result);
     return 0;
 }
