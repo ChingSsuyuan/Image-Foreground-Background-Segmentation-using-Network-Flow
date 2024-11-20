@@ -200,7 +200,8 @@ int main() {
         cout << node << " ";
     }
     cout << endl;
-
+    Vec3b sourceColor = image.at<Vec3b>(source / cols, source % cols);
+    Vec3b sinkColor = image.at<Vec3b>(sink / cols, sink % cols);
     auto end = chrono::high_resolution_clock::now();
     chrono::duration<double> duration = end - start;
     cout << "Time: " << duration.count() << " seconds" << endl;
