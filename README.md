@@ -2,7 +2,7 @@
 
 ## Segmentation Results:
 
-| ![Image 1](image1.png) | ![Image 2](Pictures/segmentation_result.png) |
+| ![Image 1](Pictures/280*200.png) | ![Image 2](Pictures/segmentation_result.png) |
 |------------------------|------------------------|
 | Original Image   | Segmentation image    |
 
