@@ -8,5 +8,5 @@
 
 ## Segmentataion Flow Map :
 <div style="display: flex; justify-content: space-around;">
-  <img src="image1.png" width="45%" alt="Image 3"/>
+  <img src="Pictures/flow map.jpg" width="45%" alt="Image 3"/>
 </div>
