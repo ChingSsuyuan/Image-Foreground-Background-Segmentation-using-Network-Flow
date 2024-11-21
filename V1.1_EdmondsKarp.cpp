@@ -22,8 +22,8 @@ int Weight(const Vec3b& color1, const Vec3b& color2) {
     int dy = color1[1] - color2[1];
     int dz = color1[2] - color2[2];
     double rgbDistance = std::sqrt(dx * dx + dy * dy + dz * dz);
-    // int weight = static_cast<int>(C * std::exp(-ALPHA * (rgbDistance / SIGMA_RGB)));
-    int weight = static_cast<int>(C * std::exp(-rgbDistance));
+    int weight = static_cast<int>(C * std::exp(-ALPHA * (rgbDistance / SIGMA_RGB)));
+    // int weight = static_cast<int>(C * std::exp(-rgbDistance));
     return std::clamp(weight, 1, 100);
 }
 
