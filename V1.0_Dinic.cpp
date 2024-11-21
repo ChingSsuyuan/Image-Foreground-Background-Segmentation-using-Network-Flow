@@ -235,7 +235,7 @@ int main() {
 
         vector<int> S, T;
         graph.dinic(source, sink, S, T);
-        
+        //Copyright [2024] [Siyuan Jing]
         auto end = chrono::high_resolution_clock::now();
         chrono::duration<double> duration = end - start;
         cout << "Time: " << duration.count() << " seconds" << endl;
