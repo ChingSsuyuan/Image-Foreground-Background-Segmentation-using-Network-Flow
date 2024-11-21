@@ -117,7 +117,7 @@ public:
         return 0;
     }
 
-    void dinic(int source, int sink, vector<int>& S, vector<int>& T) {
+    void Ford_Fulkerson(int source, int sink, vector<int>& S, vector<int>& T) {
         int maxFlow = 0;
         vector<int> level(V);
         vector<int> ptr(V);
@@ -161,8 +161,8 @@ public:
             for (auto& edge : adj[u]) {
                 int v = edge.first;
                 if (!visited[v] && capacity[u][v] - flow[u][v] > 0) {
-                    // 检查连接强度
-                    if (capacity[u][v] > C/2) {  // 只有强连接才传播
+   
+                    if (capacity[u][v] > C/2) {  
                         hasStrongConnection = true;
                         visited[v] = true;
                         q.push(v);
@@ -177,7 +177,7 @@ public:
             }
         }
 
-        // 处理未访问的节点
+
         for (int i = 0; i < V; i++) {
             if (!visited[i]) {
                 T.push_back(i);
@@ -234,7 +234,7 @@ int main() {
         }
 
         vector<int> S, T;
-        graph.dinic(source, sink, S, T);
+        graph.Ford_Fulkerson(source, sink, S, T);
         
         auto end = chrono::high_resolution_clock::now();
         chrono::duration<double> duration = end - start;
