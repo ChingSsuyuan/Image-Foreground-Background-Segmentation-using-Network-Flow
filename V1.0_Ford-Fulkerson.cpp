@@ -41,7 +41,7 @@ std::vector<std::vector<std::vector<int>>> Build_Matrix(const Mat& image) {
             pf.position = Point(x, y);
             features[y][x] = pf;
             
-            // 增加位置距离权重
+
             auto calcWeight = [&](int y2, int x2) -> int {
                 Vec3b color2 = image.at<Vec3b>(y2, x2);
                 double spatialDist = std::sqrt((y-y2)*(y-y2) + (x-x2)*(x-x2));
@@ -73,9 +73,9 @@ public:
 
     void addEdge(int u, int v, int cap) {
         adj[u].push_back({v, cap});
-        adj[v].push_back({u, cap}); // 改为双向边，权重相同
+        adj[v].push_back({u, cap}); 
         capacity[u][v] = cap;
-        capacity[v][u] = cap; // 添加反向边容量
+        capacity[v][u] = cap; 
     }
 
     bool bfs(int source, vector<int>& level) {
@@ -122,20 +122,20 @@ public:
         vector<int> level(V);
         vector<int> ptr(V);
 
-        // 添加源点和汇点的特殊处理
-        const int SOURCE_WEIGHT = 200;  // 源点连接权重
-        const int SINK_WEIGHT = 200;    // 汇点连接权重
+    
+        const int SOURCE_WEIGHT = 200;  
+        const int SINK_WEIGHT = 200;    
 
-        // 为源点添加较强的连接
+
         for (int i = 0; i < V; i++) {
-            if (abs(i - source) < V/4) {  // 源点周围的区域
+            if (abs(i - source) < V/4) {  
                 capacity[source][i] = SOURCE_WEIGHT;
             }
         }
 
-        // 为汇点添加较强的连接
+ 
         for (int i = 0; i < V; i++) {
-            if (abs(i - sink) < V/4) {    // 汇点周围的区域
+            if (abs(i - sink) < V/4) {   
                 capacity[i][sink] = SINK_WEIGHT;
             }
         }
@@ -147,7 +147,7 @@ public:
             }
         }
 
-        // 使用改进的方法来确定集合S和T
+
         vector<bool> visited(V, false);
         queue<int> q;
         q.push(source);
