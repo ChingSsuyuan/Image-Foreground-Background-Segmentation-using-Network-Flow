@@ -7,8 +7,8 @@
             "command": "g++",
             "args": [
                 "-std=c++17",
-                "-I/opt/homebrew/opt/opencv/include/opencv4", // 头文件路径
-                "-L/opt/homebrew/opt/opencv/lib",              // 库文件路径
+                "-I/opt/homebrew/opt/opencv/include/opencv4", 
+                "-L/opt/homebrew/opt/opencv/lib",              
                 "-lopencv_gapi",
                 "-lopencv_stitching",
                 "-lopencv_alphamat",
@@ -65,16 +65,16 @@
                 "-lopencv_photo",
                 "-lopencv_imgproc",
                 "-lopencv_core",
-                "${file}",  // 源文件
-                "-o",       // 输出选项
-                "${fileDirname}/output" // 可执行文件的输出路径
+                "${file}",
+                "-o",       
+                "${fileDirname}/output" 
             ],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
             "problemMatcher": ["$gcc"],
-            "detail": "编译 OpenCV 项目"
+            "detail": "77"
         }
     ]
 }
