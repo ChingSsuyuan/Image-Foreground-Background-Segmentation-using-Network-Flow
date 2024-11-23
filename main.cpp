@@ -43,11 +43,13 @@ public:
         processButton->callback(ProcessImageCallback, this);
 
         infoEditor = new Fl_Text_Editor(w / 2 - 110, h - 150, w - 40, 80);
-        infoEditor->box(FL_FLAT_BOX);
-        infoEditor->color(FL_GRAY);
-        infoEditor->textcolor(FL_BLACK);
+        infoEditor->box(FL_NO_BOX);  // 设置背景为透明
+        infoEditor->textcolor(FL_BLACK);  // 设置文字颜色
+        infoEditor->textfont(FL_HELVETICA_BOLD);  // 加粗字体
+        infoEditor->textsize(18);  // 设置文字大小
         infoBuffer = new Fl_Text_Buffer();
         infoEditor->buffer(infoBuffer);
+        end();
 
         end();
     }
