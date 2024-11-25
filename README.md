@@ -8,9 +8,10 @@
 
 ## K Segmentations:
 
-| ![Image 5](Pictures/1000*450.png) | ![Image 6](Pictures/result1.png) |
-|------------------------|------------------------|
-| Original Image   | K Segmentations Image    | 
+![Image 5](Pictures/1000*450.png)!
+Original Image   
+![Image 6](Pictures/result1.png) 
+K Segmentations Image    
 
 ## Segmentataion Flow Map :
 <div style="display: flex; justify-content: space-around;">
