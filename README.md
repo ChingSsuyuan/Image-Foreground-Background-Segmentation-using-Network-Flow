@@ -8,7 +8,7 @@
 
 ## K Segmentations:
 
-| ![Image 1](Pictures/280*200.png) | ![Image 2](Pictures/segmentation_result.png) |
+| ![Image 5](Pictures/1000*450.png) | ![Image 2](Pictures/segmentation_result.png) |
 |------------------------|------------------------|
 | Original Image   | Foreground Image    | 
 
