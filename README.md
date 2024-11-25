@@ -10,7 +10,7 @@
 
 | ![Image 5](Pictures/1000*450.png) | ![Image 6](Pictures/segmentation_result.png) |
 |------------------------|------------------------|
-| Original Image   | Foreground Image    | 
+| Original Image   | K Segmentations Image    | 
 
 ## Segmentataion Flow Map :
 <div style="display: flex; justify-content: space-around;">
