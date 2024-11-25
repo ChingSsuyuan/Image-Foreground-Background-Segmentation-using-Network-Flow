@@ -16,6 +16,9 @@
 |------------------------|------------------------|
  Original Image：  | K Segmentations Image(K=4)    | 
 
+| ![Image 5](Pictures/750*650.png)| ![Image 6](Pictures/result4.png) |
+|------------------------|------------------------|
+ Original Image：  | K Segmentations Image(K=5)    | 
 
 ## Segmentataion Flow Map :
 <div style="display: flex; justify-content: space-around;">
