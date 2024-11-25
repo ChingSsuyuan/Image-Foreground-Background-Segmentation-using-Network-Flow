@@ -7,10 +7,10 @@
 | Original Image   | Foreground Image    | Background Image |
 
 ## K Segmentations:
-### Original Image：
-![Image 5](Pictures/1000*450.png)
-### K Segmentations Image(K=4)：
-![Image 6](Pictures/result1.png) 
+
+| ![Image 5](Pictures/1000*450.png)| ![Image 6](Pictures/result1.png) |
+|------------------------|------------------------|
+ Original Image：  | K Segmentations Image(K=4)    | 
 
 
 ## Segmentataion Flow Map :
