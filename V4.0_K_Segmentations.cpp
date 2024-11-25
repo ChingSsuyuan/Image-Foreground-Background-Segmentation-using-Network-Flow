@@ -34,22 +34,21 @@ struct KSegmentCompressedImage {
     int originalRows;
     int originalCols;
     vector<vector<Vec3b>> blockColors;
-    vector<Point> seedPoints;  // Store k seed points
-    vector<Vec3b> segmentColors;  // Average colors for each segment
+    vector<Point> seedPoints;  
+    vector<Vec3b> segmentColors;  
 };
 
 struct PixelFeature {
     Vec3b colorRGB;
     Point position;
-    int segment;  // Current segment assignment
-    vector<double> probabilities;  // Probability distribution over segments
+    int segment;  
+    vector<double> probabilities;  
 };
 
 const int C = 100;
 const double SIGMA_RGB = 10.0;
 const double ALPHA = 0.01;
 const double CONVERGENCE_THRESHOLD = 0.01;
-// Enhanced weight calculation for k-way segmentation
 double WeightK(const Vec3b& color1, const Vec3b& color2, const Point& pos1, const Point& pos2) {
     double dx = color1[0] - color2[0];
     double dy = color1[1] - color2[1];
@@ -66,20 +65,18 @@ vector<Point> initializeSeedPoints(const Mat& image, int k) {
     vector<Point> seedPoints;
     vector<double> minDistances(image.rows * image.cols, DBL_MAX);
     
-    // 选择第一个种子点（图像中心）
+
     Point firstSeed(image.cols / 2, image.rows / 2);
     seedPoints.push_back(firstSeed);
     
-    // 为剩余的k-1个种子点使用K-means++策略
+
     for (int i = 1; i < k; i++) {
-        // 计算每个像素到最近种子点的距离
         double totalDistance = 0.0;
         for (int y = 0; y < image.rows; y++) {
             for (int x = 0; x < image.cols; x++) {
                 Vec3b currentColor = image.at<Vec3b>(y, x);
                 double minDist = DBL_MAX;
                 
-                // 找到最近的种子点
                 for (const Point& seed : seedPoints) {
                     Vec3b seedColor = image.at<Vec3b>(seed.y, seed.x);
                     double dist = norm(Vec3d(currentColor) - Vec3d(seedColor));
@@ -91,7 +88,6 @@ vector<Point> initializeSeedPoints(const Mat& image, int k) {
             }
         }
         
-        // 选择新的种子点
         double threshold = totalDistance / 2;
         double sum = 0.0;
         Point newSeed;
@@ -110,7 +106,6 @@ vector<Point> initializeSeedPoints(const Mat& image, int k) {
     
     return seedPoints;
 }
-// Build probabilistic adjacency matrix for k segments
 vector<vector<vector<double>>> BuildProbabilisticMatrix(const Mat& image, const vector<Point>& seedPoints) {
     int rows = image.rows;
     int cols = image.cols;
@@ -119,7 +114,6 @@ vector<vector<vector<double>>> BuildProbabilisticMatrix(const Mat& image, const 
     vector<vector<vector<double>>> probMatrix(rows, 
         vector<vector<double>>(cols, vector<double>(k, 0.0)));
     
-    // Initialize with Gaussian mixture model
     for (int y = 0; y < rows; ++y) {
         for (int x = 0; x < cols; ++x) {
             Vec3b pixelColor = image.at<Vec3b>(y, x);
@@ -145,7 +139,6 @@ vector<vector<vector<double>>> BuildProbabilisticMatrix(const Mat& image, const 
     return probMatrix;
 }
 
-// Calculate average colors for each segment
 vector<Vec3b> calculateSegmentColors(const Mat& image, const vector<vector<vector<double>>>& probMatrix,int k) {
     vector<Vec3d> colorSums(k, Vec3d(0, 0, 0));
     vector<double> counts(k, 0.0);
@@ -175,7 +168,6 @@ vector<Vec3b> calculateSegmentColors(const Mat& image, const vector<vector<vecto
     return segmentColors;
 }
 
-// Expectation-Maximization for k-way segmentation
 void EMSegmentation(vector<vector<vector<double>>>& probMatrix, const Mat& image, vector<Point>& seedPoints, vector<Vec3b>& segmentColors,int maxIterations = 10) {
     int rows = image.rows;
     int cols = image.cols;
@@ -197,7 +189,6 @@ void EMSegmentation(vector<vector<vector<double>>>& probMatrix, const Mat& image
             }
         }
         
-        // M-step: Update segment centers
         for (int s = 0; s < k; ++s) {
             if (counts[s] > 0) {
                 newCenters[s] /= counts[s];
@@ -219,13 +210,8 @@ void EMSegmentation(vector<vector<vector<double>>>& probMatrix, const Mat& image
             }
         }
         
-        // Update probabilities
         auto newProbMatrix = BuildProbabilisticMatrix(image, seedPoints);
-        
-        // Update segment colors
         segmentColors = calculateSegmentColors(image, newProbMatrix, k);
-        
-        // Check convergence
         double maxDiff = 0.0;
         for (int y = 0; y < rows; ++y) {
             for (int x = 0; x < cols; ++x) {
@@ -244,8 +230,6 @@ void EMSegmentation(vector<vector<vector<double>>>& probMatrix, const Mat& image
         // }
     }
 }
-
-// Generate final segmentation result using original image colors
 Mat generateSegmentationResult(const Mat& original, const vector<vector<vector<double>>>& probMatrix,const vector<Vec3b>& segmentColors) {
     Mat result(original.size(), original.type());
     vector<vector<int>> segmentAssignments(original.rows, vector<int>(original.cols, 0));
@@ -266,8 +250,7 @@ Mat generateSegmentationResult(const Mat& original, const vector<vector<vector<d
             segmentAssignments[y][x] = maxSegment;
         }
     }
-    
-    // Calculate average color for each segment using original image colors
+
     vector<Vec3d> segmentColorSums(segmentColors.size(), Vec3d(0, 0, 0));
     vector<int> segmentPixelCounts(segmentColors.size(), 0);
     
@@ -291,7 +274,6 @@ Mat generateSegmentationResult(const Mat& original, const vector<vector<vector<d
         }
     }
     
-    // Apply average original colors to result
     for (int y = 0; y < original.rows; ++y) {
         for (int x = 0; x < original.cols; ++x) {
             int segment = segmentAssignments[y][x];
@@ -302,7 +284,6 @@ Mat generateSegmentationResult(const Mat& original, const vector<vector<vector<d
     return result;
 }
 
-// Modified main function to handle k segments
 int main() {
     Mat image = imread("Pictures/800*500.png");
     if (image.empty()) {
@@ -323,7 +304,6 @@ int main() {
     
     auto start = chrono::high_resolution_clock::now();
     
-    // Build initial probability matrix
     auto probMatrix = BuildProbabilisticMatrix(image, seedPoints);
     vector<Vec3b> segmentColors = calculateSegmentColors(image, probMatrix, k);
     EMSegmentation(probMatrix, image, seedPoints, segmentColors);
