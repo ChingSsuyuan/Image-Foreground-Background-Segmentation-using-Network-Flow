@@ -8,6 +8,10 @@
 
 ## K Segmentations:
 
+|![Image 8](Pictures/800*500.png)| ![Image 7](Pictures/result3.png) |
+|------------------------|------------------------|
+| Original Image：  | K Segmentations Image(K=4)    | 
+
 | ![Image 5](Pictures/1000*450.png)| ![Image 6](Pictures/result1.png) |
 |------------------------|------------------------|
  Original Image：  | K Segmentations Image(K=4)    | 
