@@ -1,6 +1,6 @@
 # Image Segmentation using Network Flow
 
-## 2 Segmentation Results:
+## Foreground Segmentation Results:
 
 | ![Image 1](Pictures/280*200.png) | ![Image 2](Pictures/result2.png) | ![Image 4](Pictures/t_set_result.png)|
 |------------------------|------------------------|-------------------|
