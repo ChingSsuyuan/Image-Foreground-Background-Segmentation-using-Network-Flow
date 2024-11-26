@@ -22,9 +22,10 @@
 
 # How to run the codes:
 ### Dependencies: 
-- 1.g++/ gcc/ Clang 
-- 2.Opencv
-- 3.right path to your file 
+- g++/ gcc/ Clang 
+- Opencv
+- Right path to your file 
+### Terminal codes:
 
 ## Segmentataion Flow Map :
 <div style="display: flex; justify-content: space-around;">
