@@ -26,7 +26,8 @@
 - Opencv
 - Right path to your file 
 ### Terminal codes:
-
+- Crtl + Shift +B to compile the codes
+- ./outputs
 ## Segmentataion Flow Map :
 <div style="display: flex; justify-content: space-around;">
   <img src="Pictures/flow map.jpg" width="45%" alt="Image 3"/>
