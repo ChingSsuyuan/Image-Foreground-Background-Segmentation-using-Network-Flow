@@ -21,17 +21,17 @@
  Original Image：  | K Segmentations Image(K=5)    | å
 
 # How to run the codes:
-### Dependencies: 
-- g++/ gcc/ Clang 
-- Opencv
-- Right path to your file
-### Project structure:
-|___ .vscode/tasks.json        
-|___ .vscode/c_cpp_properties.json            
-|___ Pictures         
-|___ output  
-|___ V2.0_K_Segmentations.cpp
-### Terminal codes:
+## Dependencies: 
+- #### g++/ gcc/ Clang 
+- #### Opencv
+- #### Right path to your file
+## Project structure:
+### |___ .vscode/tasks.json        
+### |___ .vscode/c_cpp_properties.json            
+### |___ Pictures         
+### |___ output  
+### |___ V2.0_K_Segmentations.cpp
+## Terminal codes:
 - [Crtl + Shift +B]to compile the codes
 - ./outputs
 ## Segmentataion Flow Map :
