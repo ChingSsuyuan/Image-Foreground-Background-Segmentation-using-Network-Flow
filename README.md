@@ -26,11 +26,11 @@
 - Opencv
 - Right path to your file
 ### Project structure:
-├──.vscode/tasks.json        
-├──.vscode/c_cpp_properties.json            
-├──Pictures         
-├──output  
-└──V2.0_K_Segmentations.cpp
+|___ .vscode/tasks.json        
+|___ .vscode/c_cpp_properties.json            
+|___ Pictures         
+|___ output  
+|___ V2.0_K_Segmentations.cpp
 ### Terminal codes:
 - [Crtl + Shift +B]to compile the codes
 - ./outputs
