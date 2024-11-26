@@ -25,7 +25,8 @@
 - g++/ gcc/ Clang 
 - Opencv
 - Right path to your file
-- project/
+- project
+  
 ├──.vscode/tasks.json        
 ├──.vscode/c_cpp_properties.json            
 ├──Pictures         
