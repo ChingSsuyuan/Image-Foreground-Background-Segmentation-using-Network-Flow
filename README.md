@@ -25,7 +25,7 @@
 - ### g++/ gcc/ Clang 
 - ### Opencv
 - ### Right path to your file
-## Project structure:
+## Project Structure:
 #### |___ .vscode/tasks.json        
 #### |___ .vscode/c_cpp_properties.json            
 #### |___ Pictures         
