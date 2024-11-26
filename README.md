@@ -22,7 +22,7 @@
 
 # How to run the codes:
 ### Dependencies: 
-- 1. g++/ gcc/ Clang 
+- 1.g++/ gcc/ Clang 
 - 2.Opencv
 - 3.right path to your file 
 
