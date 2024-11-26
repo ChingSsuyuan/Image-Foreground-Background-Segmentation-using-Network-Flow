@@ -14,11 +14,11 @@
 
 | ![Image 5](Pictures/1000*450.png)| ![Image 6](Pictures/result1.png) |
 |------------------------|------------------------|
- Original Image：  | K Segmentations Image(K=4)    | 
+ Original Image：  | K Segmentations Image(K=5)    | 
 
 | ![Image 5](Pictures/750*650.png)| ![Image 6](Pictures/result5.png) |
 |------------------------|------------------------|
- Original Image：  | K Segmentations Image(K=5)    | å
+ Original Image：  | K Segmentations Image(K=7)    | å
 
 # How to run the codes:
 ## Dependencies: 
