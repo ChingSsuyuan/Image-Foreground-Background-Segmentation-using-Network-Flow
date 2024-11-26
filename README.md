@@ -24,7 +24,13 @@
 ### Dependencies: 
 - g++/ gcc/ Clang 
 - Opencv
-- Right path to your file 
+- Right path to your file
+- project/
+├──.vscode/tasks.json        
+├──.vscode/c_cpp_properties.json            
+├──Pictures         
+├──output  
+└──V2.0_K_Segmentations.cpp
 ### Terminal codes:
 - [Crtl + Shift +B]to compile the codes
 - ./outputs
