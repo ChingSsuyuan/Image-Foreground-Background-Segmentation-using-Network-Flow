@@ -18,20 +18,19 @@
 
 | ![Image 5](Pictures/750*650.png)| ![Image 6](Pictures/result4.png) |
 |------------------------|------------------------|
- Original Image：  | K Segmentations Image(K=5)    | 
+ Original Image：  | K Segmentations Image(K=5)    | å
 
 # How to run the codes:
 ### Dependencies: 
 - g++/ gcc/ Clang 
 - Opencv
 - Right path to your file
-- project
-  
-- ├──.vscode/tasks.json        
-- ├──.vscode/c_cpp_properties.json            
-- ├──Pictures         
-- ├──output  
-- └──V2.0_K_Segmentations.cpp
+### Project structure:
+├──.vscode/tasks.json        
+├──.vscode/c_cpp_properties.json            
+├──Pictures         
+├──output  
+└──V2.0_K_Segmentations.cpp
 ### Terminal codes:
 - [Crtl + Shift +B]to compile the codes
 - ./outputs
