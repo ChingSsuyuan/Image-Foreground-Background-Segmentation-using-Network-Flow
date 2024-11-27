@@ -23,7 +23,7 @@
  
 | ![Image 9]( Pictures/segmentation_layer_1.png)| ![Image 10]( Pictures/segmentation_layer_4.png) |
 |------------------------|------------------------|
-Layer:Clouds  |   Layer:land  | 
+Layer:Clouds  |   Layer:Land  | 
 
 # How to run the codes:
 ## Dependencies: 
