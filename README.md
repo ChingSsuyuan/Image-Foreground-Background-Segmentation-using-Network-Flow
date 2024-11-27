@@ -19,7 +19,11 @@
 
 | ![Image 5](Pictures/750*650.png)| ![Image 6](Pictures/result5.png) |
 |------------------------|------------------------|
- Original Image：  | K Segmentations Image(K=7)    | å
+ Original Image：  | K Segmentations Image(K=7)    | 
+ 
+| ![Image 9]( Pictures/segmentation_layer_1.png)| ![Image 10](segmentation_layer_1.png) |
+|------------------------|------------------------|
+Layer:Clouds  |   Layer:land  | 
 
 # How to run the codes:
 ## Dependencies: 
