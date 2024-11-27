@@ -21,7 +21,7 @@
 |------------------------|------------------------|
  Original Image：  | K Segmentations Image(K=7)    | 
  
-| ![Image 9]( Pictures/segmentation_layer_1.png)| ![Image 10](segmentation_layer_1.png) |
+| ![Image 9]( Pictures/segmentation_layer_1.png)| ![Image 10](segmentation_layer_4.png) |
 |------------------------|------------------------|
 Layer:Clouds  |   Layer:land  | 
 
