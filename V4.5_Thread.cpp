@@ -13,13 +13,12 @@
 using namespace std;
 using namespace cv;
 
-// 常量定义
 const int C = 100;
 const double SIGMA_RGB = 3.0;
 const double ALPHA = 0.01;
 const double CONVERGENCE_THRESHOLD = 0.01;
 
-// 结构体定义
+
 struct KSegmentCompressedImage {
     Mat compressed;
     int originalRows;
@@ -29,7 +28,7 @@ struct KSegmentCompressedImage {
     vector<Vec3b> segmentColors;  
 };
 
-// 确定压缩块大小的函数
+
 int determineBlockSize(int totalPixels) {
     if (totalPixels < 90000) {
         return 1;
@@ -47,7 +46,6 @@ int determineBlockSize(int totalPixels) {
 }
 
 
-// 计算权重的辅助函数
 double WeightK(const Vec3b& color1, const Vec3b& color2, const Point& pos1, const Point& pos2) {
     double dx = color1[0] - color2[0];
     double dy = color1[1] - color2[1];
@@ -61,25 +59,19 @@ double WeightK(const Vec3b& color1, const Vec3b& color2, const Point& pos1, cons
     return C * std::exp(-rgbDistance / SIGMA_RGB - spatialDist * ALPHA);
 }
 
-// 初始化种子点的函数
+
 vector<Point> initializeSeedPoints(const Mat& image, int k) {
     vector<Point> seedPoints;
     vector<double> minDistances(image.rows * image.cols, DBL_MAX);
     
-    // 选择第一个种子点（图像中心）
     Point firstSeed(image.cols / 2, image.rows / 2);
     seedPoints.push_back(firstSeed);
-    
-    // 为剩余的k-1个种子点使用K-means++策略
     for (int i = 1; i < k; i++) {
-        // 计算每个像素到最近种子点的距离
         double totalDistance = 0.0;
         for (int y = 0; y < image.rows; y++) {
             for (int x = 0; x < image.cols; x++) {
                 Vec3b currentColor = image.at<Vec3b>(y, x);
                 double minDist = DBL_MAX;
-                
-                // 找到最近的种子点
                 for (const Point& seed : seedPoints) {
                     Vec3b seedColor = image.at<Vec3b>(seed.y, seed.x);
                     double dist = norm(Vec3d(currentColor) - Vec3d(seedColor));
@@ -90,8 +82,6 @@ vector<Point> initializeSeedPoints(const Mat& image, int k) {
                 totalDistance += minDist;
             }
         }
-        
-        // 选择新的种子点
         double threshold = totalDistance / 2;
         double sum = 0.0;
         Point newSeed;
@@ -121,8 +111,6 @@ KSegmentCompressedImage compressImageParallel(const Mat& originalImage, int bloc
     
     result.compressed = Mat(compressedRows, compressedCols, originalImage.type());
     result.blockColors.resize(compressedRows, vector<Vec3b>(compressedCols));
-    
-    // 使用 async 并行处理每个块
     vector<future<void>> futures;
     
     for (int i = 0; i < compressedRows; i++) {
@@ -153,7 +141,6 @@ KSegmentCompressedImage compressImageParallel(const Mat& originalImage, int bloc
     return result;
 }
 
-// 并行构建概率矩阵
 vector<vector<vector<double>>> BuildProbabilisticMatrixParallel(const Mat& image, const vector<Point>& seedPoints) {
     int rows = image.rows;
     int cols = image.cols;
@@ -161,8 +148,7 @@ vector<vector<vector<double>>> BuildProbabilisticMatrixParallel(const Mat& image
     
     vector<vector<vector<double>>> probMatrix(rows,
         vector<vector<double>>(cols, vector<double>(k, 0.0)));
-    
-    // 使用 async 并行处理每个像素
+
     vector<future<void>> futures;
     
     for (int y = 0; y < rows; ++y) {
@@ -196,12 +182,10 @@ vector<vector<vector<double>>> BuildProbabilisticMatrixParallel(const Mat& image
     return probMatrix;
 }
 
-// 并行计算段颜色
 vector<Vec3b> calculateSegmentColorsParallel(const Mat& image,const vector<vector<vector<double>>>& probMatrix,int k) {
     vector<Vec3d> colorSums(k, Vec3d(0, 0, 0));
     vector<double> counts(k, 0.0);
     
-    // 使用 async 并行处理每个段
     vector<future<pair<Vec3d, double>>> futures;
     
     for (int s = 0; s < k; ++s) {
@@ -242,7 +226,6 @@ vector<Vec3b> calculateSegmentColorsParallel(const Mat& image,const vector<vecto
     return segmentColors;
 }
 
-// 并行 EM 分割
 void EMSegmentationParallel(vector<vector<vector<double>>>& probMatrix,
 const Mat& image,vector<Point>& seedPoints,
 vector<Vec3b>& segmentColors,int maxIterations = 10) {
@@ -251,7 +234,6 @@ vector<Vec3b>& segmentColors,int maxIterations = 10) {
     int k = seedPoints.size();
     
     for (int iter = 0; iter < maxIterations; ++iter) {
-        // 并行计算新的中心点
         vector<future<pair<Vec3d, double>>> centerFutures;
         for (int s = 0; s < k; ++s) {
             centerFutures.push_back(async(launch::async, [&](int segment) {
@@ -280,7 +262,6 @@ vector<Vec3b>& segmentColors,int maxIterations = 10) {
             }
         }
         
-        // 并行更新种子点
         vector<future<Point>> seedFutures;
         for (int s = 0; s < k; ++s) {
             seedFutures.push_back(async(launch::async, [&](int segment) {
@@ -306,8 +287,7 @@ vector<Vec3b>& segmentColors,int maxIterations = 10) {
         for (int s = 0; s < k; ++s) {
             seedPoints[s] = seedFutures[s].get();
         }
-        
-        // 并行更新概率矩阵和段颜色
+
         auto newProbMatrix = BuildProbabilisticMatrixParallel(image, seedPoints);
         segmentColors = calculateSegmentColorsParallel(image, newProbMatrix, k);
         
@@ -315,12 +295,9 @@ vector<Vec3b>& segmentColors,int maxIterations = 10) {
     }
 }
 
-// 并行生成分割结果
 Mat generateSegmentationResultParallel(const Mat& original,const vector<vector<vector<double>>>& probMatrix,const vector<Vec3b>& segmentColors) {
     Mat result(original.size(), original.type());
     int k = segmentColors.size();
-    
-    // 并行处理每一行
     vector<future<void>> futures;
     for (int y = 0; y < original.rows; ++y) {
         futures.push_back(async(launch::async, [&](int row) {
@@ -358,20 +335,17 @@ int main() {
     cout << "Image size: " << image.cols << "x" << image.rows << endl;
     cout << "Total pixels: " << totalPixels << endl;
     
-    // 确定压缩块大小
     int BLOCK_SIZE = determineBlockSize(totalPixels);
     cout << "Block size: " << BLOCK_SIZE << endl;
     
     auto start = chrono::high_resolution_clock::now();
-    
-    // 并行压缩图像
     KSegmentCompressedImage compressedImage = compressImageParallel(image, BLOCK_SIZE);
     cout << "Compressed image size: " << compressedImage.compressed.cols << "x" << compressedImage.compressed.rows << endl;
     
     const int k = 10;
     vector<Point> seedPoints = initializeSeedPoints(compressedImage.compressed, k);
     
-    // 使用并行算法处理压缩后的图像
+
     auto probMatrix = BuildProbabilisticMatrixParallel(compressedImage.compressed, seedPoints);
     vector<Vec3b> segmentColors = calculateSegmentColorsParallel(compressedImage.compressed, probMatrix, k);
     EMSegmentationParallel(probMatrix, compressedImage.compressed, seedPoints, segmentColors);
@@ -389,7 +363,7 @@ int main() {
     cout << "Speed: " << static_cast<int>(pixelsPerSecond) << " pixels/second" << endl;
     cout << "Number of segments: " << k << endl;
     
-    // 调整并标记种子点
+
     for (int i = 0; i < k; ++i) {
         Point adjustedSeed(
             seedPoints[i].x * image.cols / compressedImage.compressed.cols,
