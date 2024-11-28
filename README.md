@@ -41,5 +41,5 @@ Layer:Clouds  |   Layer:Land  |
 - ./outputs
 ## Segmentataion Flow Map :
 <div style="display: flex; justify-content: space-around;">
-  <img src="Pictures/flow map.jpg" width="45%" alt="Image 3"/>
+  <img src="board-droll-funster.jpg" width="65%" alt="Image 3"/>
 </div>
