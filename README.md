@@ -1,4 +1,4 @@
-# Image Segmentation using Network Flow
+# Image Segmentation (Network Flow)
 
 ## Foreground Segmentation Results:
 
