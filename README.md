@@ -45,4 +45,4 @@ Layer:Clouds  |   Layer:Land  |
 </div>
 
 ## Acknowledgments
-[Haonan Wu](https://github.com/HaonanWu17) & [Mingdong Zhou](https://github.com/mzou12)&[HM Sabbir Ahmad](https://github.com/SabbirAhmad26)
+[Haonan Wu](https://github.com/HaonanWu17) & [Minghong Zhou](https://github.com/mzou12)&[HM Sabbir Ahmad](https://github.com/SabbirAhmad26)
