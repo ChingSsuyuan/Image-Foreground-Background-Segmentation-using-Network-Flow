@@ -44,5 +44,5 @@ Layer:Clouds  |   Layer:Land  |
   <img src="board-droll-funster.jpg" width="65%" alt="Image 3"/>
 </div>
 
-## Acknowledgmens
+## Acknowledgments
 [Haonan Wu](https://github.com/HaonanWu17) & [Mingdong Zhou](https://github.com/mzou12)
