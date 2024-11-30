@@ -2,9 +2,9 @@
 
 ## Foreground Segmentation Results:
 
-| ![Image 1](Pictures/280*200.png) | ![Image 2](Pictures/result2.png) | ![Image 4](Pictures/t_set_result.png)|
-|------------------------|------------------------|-------------------|
-| Original Image   | Foreground Image    | Background Image |
+| ![Image 1](Pictures/1920*1440.png) | ![Image 2](Pictures/1.png) | 
+|------------------------|------------------------|
+| Original Image   | Foreground Image    |
 
 ## K Segmentations:
 
