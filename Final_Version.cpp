@@ -39,7 +39,7 @@ int DBS(int totalPixels) {
     } else if (totalPixels < 650000) {
         return 3;
     } else {
-        return 2;
+        return 3;
     }
 }
 double WeightK(const Vec3b& color1, const Vec3b& color2, const Point& pos1, const Point& pos2) {
