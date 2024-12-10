@@ -59,20 +59,20 @@ vector<Point> SPs(const Mat& image, int k) {
     vector<Point> seedPoints;
     vector<double> minDistances(image.rows * image.cols, DBL_MAX);
     
-    // 选择第一个种子点（图像中心）
+
     Point firstSeed(image.cols / 2, image.rows / 2);
     seedPoints.push_back(firstSeed);
     
-    // 为剩余的k-1个种子点使用K-means++策略
+
     for (int i = 1; i < k; i++) {
-        // 计算每个像素到最近种子点的距离
+
         double totalDistance = 0.0;
         for (int y = 0; y < image.rows; y++) {
             for (int x = 0; x < image.cols; x++) {
                 Vec3b currentColor = image.at<Vec3b>(y, x);
                 double minDist = DBL_MAX;
                 
-                // 找到最近的种子点
+
                 for (const Point& seed : seedPoints) {
                     Vec3b seedColor = image.at<Vec3b>(seed.y, seed.x);
                     double dist = norm(Vec3d(currentColor) - Vec3d(seedColor));
@@ -84,7 +84,7 @@ vector<Point> SPs(const Mat& image, int k) {
             }
         }
         
-        // 选择新的种子点
+
         double threshold = totalDistance / 2;
         double sum = 0.0;
         Point newSeed;
@@ -115,7 +115,7 @@ LKSPI CI(const Mat& originalImage, int blockSize) {
     result.compressed = Mat(compressedRows, compressedCols, originalImage.type());
     result.blockColors.resize(compressedRows, vector<Vec3b>(compressedCols));
     
-    // 使用 async 并行处理每个块
+
     vector<future<void>> futures;
     
     for (int i = 0; i < compressedRows; i++) {
@@ -154,7 +154,7 @@ vector<vector<vector<double>>> Matrix(const Mat& image, const vector<Point>& see
     vector<vector<vector<double>>> probMatrix(rows,
         vector<vector<double>>(cols, vector<double>(k, 0.0)));
     
-    // 使用 async 并行处理每个像素
+
     vector<future<void>> futures;
     
     for (int y = 0; y < rows; ++y) {
@@ -191,7 +191,7 @@ vector<Vec3b> CSCP(const Mat& image,const vector<vector<vector<double>>>& probMa
     vector<Vec3d> colorSums(k, Vec3d(0, 0, 0));
     vector<double> counts(k, 0.0);
     
-    // 使用 async 并行处理每个段
+
     vector<future<pair<Vec3d, double>>> futures;
     
     for (int s = 0; s < k; ++s) {
@@ -240,7 +240,6 @@ vector<Vec3b>& segmentColors,int maxIterations = 10) {
     int k = seedPoints.size();
     
     for (int iter = 0; iter < maxIterations; ++iter) {
-        // 并行计算新的中心点
         vector<future<pair<Vec3d, double>>> centerFutures;
         for (int s = 0; s < k; ++s) {
             centerFutures.push_back(async(launch::async, [&](int segment) {
@@ -269,7 +268,6 @@ vector<Vec3b>& segmentColors,int maxIterations = 10) {
             }
         }
         
-        // 并行更新种子点
         vector<future<Point>> seedFutures;
         for (int s = 0; s < k; ++s) {
             seedFutures.push_back(async(launch::async, [&](int segment) {
@@ -296,7 +294,6 @@ vector<Vec3b>& segmentColors,int maxIterations = 10) {
             seedPoints[s] = seedFutures[s].get();
         }
         
-        // 并行更新概率矩阵和段颜色
         auto newProbMatrix = Matrix(image, seedPoints);
         segmentColors = CSCP(image, newProbMatrix, k);
         
@@ -307,8 +304,6 @@ vector<Vec3b>& segmentColors,int maxIterations = 10) {
 Mat GSRP(const Mat& original,const vector<vector<vector<double>>>& probMatrix,const vector<Vec3b>& segmentColors) {
     Mat result(original.size(), original.type());
     int k = segmentColors.size();
-    
-    // 并行处理每一行
     vector<future<void>> futures;
     for (int y = 0; y < original.rows; ++y) {
         futures.push_back(async(launch::async, [&](int row) {
@@ -341,15 +336,12 @@ vector<Mat> LRs(const Mat& original,
     int k = segmentColors.size();
     vector<Mat> layers(k);
     
-    // 初始化K个图层，全部设为透明
     for (int i = 0; i < k; ++i) {
         layers[i] = Mat(original.size(), CV_8UC4, Scalar(0, 0, 0, 0));
     }
     
-    // 对每个像素，将其分配到概率最大的图层
     for (int y = 0; y < original.rows; ++y) {
         for (int x = 0; x < original.cols; ++x) {
-            // 找到最大概率的分割区域
             int maxSegment = 0;
             double maxProb = probMatrix[y][x][0];
             
@@ -359,11 +351,8 @@ vector<Mat> LRs(const Mat& original,
                     maxSegment = s;
                 }
             }
-            
-            // 获取原始像素颜色
+
             Vec3b originalColor = original.at<Vec3b>(y, x);
-            
-            // 将像素添加到对应图层，设置alpha通道为255（完全不透明）
             layers[maxSegment].at<Vec4b>(y, x) = Vec4b(originalColor[0], 
                                                       originalColor[1], 
                                                       originalColor[2], 
